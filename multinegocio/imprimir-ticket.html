@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Imprimir Ticket</title>
+    
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+    
+    <!-- Config -->
+    <script src="config_admin.js"></script>
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Courier New', monospace; }
+        body { background: #f5f5f5; padding: 20px; }
+        .ticket-container {
+            background: white; width: 320px; margin: 0 auto; padding: 15px;
+            font-size: 12px; line-height: 1.4; border: 1px solid #ddd;
+        }
+        .ticket-header {
+            text-align: center; border-bottom: 2px dashed #333;
+            padding-bottom: 10px; margin-bottom: 10px;
+        }
+        .ticket-header h1 { font-size: 18px; font-weight: bold; margin-bottom: 5px; }
+        .ticket-header .info { font-size: 10px; color: #666; }
+        .ticket-info {
+            border-bottom: 1px dashed #ccc; padding-bottom: 10px; margin-bottom: 10px;
+        }
+        .ticket-info .row {
+            display: flex; justify-content: space-between;
+            margin-bottom: 3px; font-size: 11px;
+        }
+        .ticket-info .row.datos-destacados {
+            font-size: 13px; margin: 8px 0; padding: 5px;
+            background: #f9f9f9; border-left: 3px solid #333;
+        }
+        .ticket-info .row.datos-destacados span:last-child {
+            font-size: 13px; font-weight: bold;
+        }
+        .ticket-items {
+            border-bottom: 1px dashed #ccc; padding-bottom: 10px; margin-bottom: 10px;
+        }
+        .ticket-item {
+            display: flex; justify-content: space-between;
+            margin-bottom: 5px; font-size: 11px;
+        }
+        .item-info { flex: 1; }
+        .item-name { font-weight: bold; }
+        .item-qty { margin: 0 10px; color: #666; }
+        .item-price { font-weight: bold; }
+        .ticket-observaciones {
+            border-top: 2px dashed #333; border-bottom: 2px dashed #333;
+            padding: 10px 0; margin: 10px 0;
+        }
+        .ticket-observaciones .label {
+            font-size: 12px; color: #333; margin-bottom: 5px;
+            text-transform: uppercase; letter-spacing: 1px;
+        }
+        .ticket-observaciones .texto {
+            font-size: 13px; color: #333; font-weight: bold;
+            line-height: 1.5; text-transform: uppercase;
+        }
+        .ticket-totals {
+            border-bottom: 2px dashed #333; padding-bottom: 10px; margin-bottom: 10px;
+        }
+        .total-row {
+            display: flex; justify-content: space-between;
+            margin-bottom: 3px; font-size: 11px;
+        }
+        .total-row.grand-total {
+            font-size: 16px; font-weight: bold; margin-top: 5px;
+            padding-top: 5px; border-top: 1px solid #ccc;
+        }
+        .ticket-footer {
+            text-align: center; font-size: 12px; color: #333;
+            padding-top: 10px;
+        }
+        .thank-you { 
+            font-weight: bold; font-size: 14px; margin-bottom: 8px; color: #000;
+        }
+        .message { margin-bottom: 5px; color: #333; font-size: 11px; }
+        .action-buttons {
+            position: fixed; bottom: 20px; left: 50%;
+            transform: translateX(-50%); display: flex; gap: 10px; z-index: 1000;
+        }
+        .btn {
+            padding: 12px 24px; border: none; border-radius: 8px;
+            font-size: 14px; font-weight: bold; cursor: pointer; transition: all 0.2s;
+        }
+        .btn-close { background: #6c757d; color: white; }
+        .btn-close:hover { background: #5a6268; }
+        .btn-print { background: #007bff; color: white; }
+        .btn-print:hover { background: #0056b3; }
+        .error-msg {
+            text-align: center; padding: 40px; color: #dc2626; font-size: 14px;
+        }
+        .error-msg h2 { color: #dc2626; margin-bottom: 10px; font-size: 24px; }
+        .error-msg p { margin-bottom: 20px; }
+        .debug-info {
+            background: #fff3cd; border: 1px solid #ffc107; border-radius: 8px;
+            padding: 12px; margin: 10px 0; font-size: 11px; color: #856404;
+            font-family: monospace; word-break: break-all;
+        }
+        @media print {
+            body { background: white; padding: 0; }
+            .ticket-container { width: 100%; border: none; margin: 0; padding: 10px; }
+            .action-buttons, .debug-info { display: none !important; }
+        }
+    </style>
+</head>
+<body>
+    <div class="ticket-container" id="ticket">
+        <p style="text-align:center; padding:40px;">Cargando...</p>
+    </div>
+
+    <div class="action-buttons">
+        <button class="btn btn-close" onclick="window.close()">Cerrar</button>
+        <button class="btn btn-print" onclick="window.print()">️ Imprimir</button>
+    </div>
+
+    <script>
+        let db = null;
+        let negocioId = null;
+
+        // Inicializar Firebase
+        function initFirebase() {
+            if (!firebase.apps.length && typeof firebaseConfig !== 'undefined') {
+                firebase.initializeApp(firebaseConfig);
+            }
+            db = firebase.database();
+        }
+
+        // Obtener parámetros de la URL
+        function getParams() {
+            const params = new URLSearchParams(window.location.search);
+            return {
+                pedidoId: params.get('id'),
+                negocio: params.get('negocio')
+            };
+        }
+
+        // Convertir nombre a slug
+        function nombreASlug(nombre) {
+            if (!nombre || typeof nombre !== 'string') return 'negocio-invalido-' + Date.now();
+            return nombre.toLowerCase()
+                .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+                .replace(/[^\w\s-]/g, '')
+                .trim()
+                .replace(/\s+/g, '-');
+        }
+
+        // Buscar negocio por slug o ID
+        async function buscarNegocio(negocioParam) {
+            if (!db) return { id: null, data: null };
+            
+            console.log(' Buscando negocio:', negocioParam);
+            
+            // Si empieza con "-", es un ID interno de Firebase
+            if (negocioParam.startsWith('-')) {
+                console.log('📌 Es ID interno de Firebase');
+                const snapshot = await db.ref(`negocios/${negocioParam}`).once('value');
+                if (snapshot.exists()) {
+                    return { id: negocioParam, data: snapshot.val() };
+                }
+            }
+            
+            // Buscar por slug en todos los negocios
+            console.log(' Buscando por slug...');
+            const snapshot = await db.ref('negocios').once('value');
+            let negocioEncontrado = null;
+            let negocioIdEncontrado = null;
+            
+            snapshot.forEach(child => {
+                const negocio = child.val();
+                if (negocio && negocio.nombre) {
+                    const negocioSlug = negocio.slug || nombreASlug(negocio.nombre);
+                    console.log('Comparando:', negocioSlug, '===', negocioParam);
+                    if (negocioSlug === negocioParam) {
+                        negocioEncontrado = negocio;
+                        negocioIdEncontrado = child.key;
+                    }
+                }
+            });
+            
+            return { id: negocioIdEncontrado, data: negocioEncontrado };
+        }
+
+        // Cargar datos del pedido
+        async function cargarDatosPedido() {
+            initFirebase();
+            
+            const { pedidoId, negocio } = getParams();
+            
+            console.log('📥 Parámetros recibidos:', { pedidoId, negocio });
+            
+            if (!pedidoId) {
+                mostrarError('No se especificó un pedido', 'Falta el parámetro "id" en la URL');
+                return;
+            }
+            
+            if (!negocio) {
+                mostrarError('No se especificó el negocio', 'Falta el parámetro "negocio" en la URL');
+                return;
+            }
+            
+            try {
+                // Buscar el negocio
+                const resultado = await buscarNegocio(negocio);
+                
+                if (!resultado.id || !resultado.data) {
+                    mostrarError(
+                        'Negocio no encontrado', 
+                        `No se encontró el negocio: "${negocio}"`
+                    );
+                    return;
+                }
+                
+                negocioId = resultado.id;
+                console.log('✅ Negocio encontrado:', resultado.data.nombre, 'ID:', negocioId);
+                
+                // Cargar el pedido
+                console.log('📦 Buscando pedido en:', `negocios/${negocioId}/pedidos/${pedidoId}`);
+                const snapshot = await db.ref(`negocios/${negocioId}/pedidos/${pedidoId}`).once('value');
+                
+                if (!snapshot.exists()) {
+                    mostrarError(
+                        'Pedido no encontrado', 
+                        `El pedido "${pedidoId}" no existe en el negocio "${resultado.data.nombre}"`
+                    );
+                    return;
+                }
+                
+                const pedido = snapshot.val();
+                console.log('✅ Pedido cargado:', pedido);
+                renderizarTicket(pedidoId, pedido, resultado.data);
+                
+                // Imprimir automáticamente después de 1 segundo
+                setTimeout(() => {
+                    window.print();
+                }, 1000);
+                
+            } catch (error) {
+                console.error('❌ Error:', error);
+                mostrarError('Error al cargar', error.message);
+            }
+        }
+
+        function mostrarError(titulo, detalle) {
+            const ticketDiv = document.getElementById('ticket');
+            ticketDiv.innerHTML = `
+                <div class="error-msg">
+                    <h2>️ ${titulo}</h2>
+                    <p>${detalle}</p>
+                    <button class="btn btn-close" onclick="window.close()" style="margin-top:20px;">Cerrar</button>
+                </div>
+            `;
+        }
+
+        function renderizarTicket(pedidoId, pedido, negocioData) {
+            // Fecha y hora
+            const fecha = pedido.fecha || pedido.timestamp || pedido.creadoEn || Date.now();
+            const fechaObj = new Date(fecha);
+            
+            const fechaStr = fechaObj.toLocaleDateString('es-CO', { 
+                year: 'numeric', month: 'short', day: 'numeric' 
+            });
+            const horaStr = fechaObj.toLocaleTimeString('es-CO', {
+                hour: '2-digit', minute: '2-digit'
+            });
+
+            // Número de pedido (últimos 6 caracteres del ID)
+            const idCorto = pedidoId.slice(-6).toUpperCase();
+            
+            // Cliente
+            const cliente = pedido.cliente || {};
+            
+            // Tipo de entrega
+            const metodoEntrega = pedido.metodoEntrega || 'domicilio';
+            let tipoEntregaHTML = '';
+            if (metodoEntrega === 'domicilio') {
+                tipoEntregaHTML = '🚚 <strong>A Domicilio</strong>';
+            } else if (metodoEntrega === 'recoger') {
+                tipoEntregaHTML = '🏪 <strong>Paso a Recoger</strong>';
+            } else {
+                tipoEntregaHTML = '🍽️ <strong>En Mesa</strong>';
+            }
+            
+            // Productos
+            const productos = pedido.productos || [];
+            let productosHTML = '';
+            let subtotal = 0;
+            
+            if (productos.length === 0) {
+                productosHTML = '<div style="text-align:center; padding:20px;">Sin productos</div>';
+            } else {
+                productos.forEach(producto => {
+                    const cantidad = producto.cantidad || producto.qty || 1;
+                    const precio = parseFloat(producto.precio) || 0;
+                    const itemTotal = precio * cantidad;
+                    subtotal += itemTotal;
+                    
+                    const modo = producto.modo || 'unidad';
+                    const modoLabel = modo === 'paquete' ? '📦' : '';
+                    
+                    productosHTML += `
+                        <div class="ticket-item">
+                            <div class="item-info">
+                                <div class="item-name">${modoLabel} ${producto.nombre || 'Producto'}</div>
+                            </div>
+                            <div class="item-qty">x${cantidad}</div>
+                            <div class="item-price">$${formatearPrecio(itemTotal)}</div>
+                        </div>
+                    `;
+                });
+            }
+            
+            // Total
+            const totalFinal = pedido.total || pedido.subtotal || subtotal;
+            
+            // Observaciones
+            let observacionesHTML = '';
+            if (pedido.observaciones && pedido.observaciones.trim() !== '') {
+                observacionesHTML = `
+                    <div class="ticket-observaciones">
+                        <div class="label">📝 OBSERVACIONES:</div>
+                        <div class="texto">${pedido.observaciones}</div>
+                    </div>
+                `;
+            }
+            
+            // Dirección (si es domicilio)
+            let direccionHTML = '';
+            if (metodoEntrega === 'domicilio' && pedido.direccion) {
+                direccionHTML = `
+                    <div class="row datos-destacados">
+                        <span><strong>📍 Dir:</strong></span>
+                        <span>${pedido.direccion}</span>
+                    </div>
+                `;
+                if (pedido.barrio) {
+                    direccionHTML += `
+                        <div class="row">
+                            <span><strong>Barrio:</strong></span>
+                            <span>${pedido.barrio}</span>
+                        </div>
+                    `;
+                }
+            }
+            
+            // Construir ticket HTML
+            const ticketHTML = `
+                <!-- Header -->
+                <div class="ticket-header">
+                    <h1>${(negocioData.nombre || 'NEGOCIO').toUpperCase()}</h1>
+                    ${negocioData.direccion ? `<div class="info">${negocioData.direccion}</div>` : ''}
+                    ${negocioData.telefono || negocioData.whatsapp ? `<div class="info">Tel: ${negocioData.telefono || negocioData.whatsapp}</div>` : ''}
+                    <div class="info">${fechaStr}</div>
+                    <div class="info">${horaStr}</div>
+                </div>
+
+                <!-- Info del pedido -->
+                <div class="ticket-info">
+                    <div class="row">
+                        <span><strong>Pedido #:</strong></span>
+                        <span>#${idCorto}</span>
+                    </div>
+                    <div class="row">
+                        <span><strong>Cliente:</strong></span>
+                        <span>${cliente.nombre || 'Cliente Invitado'}</span>
+                    </div>
+                    <div class="row datos-destacados">
+                        <span><strong> Tel:</strong></span>
+                        <span>${cliente.telefono || cliente.celular || 'No registrado'}</span>
+                    </div>
+                    <div class="row">
+                        <span><strong>Tipo:</strong></span>
+                        <span>${tipoEntregaHTML}</span>
+                    </div>
+                    ${direccionHTML}
+                </div>
+
+                ${observacionesHTML}
+
+                <!-- Items -->
+                <div class="ticket-items">
+                    ${productosHTML}
+                </div>
+
+                <!-- Totales -->
+                <div class="ticket-totals">
+                    <div class="total-row">
+                        <span>Subtotal:</span>
+                        <span>$${formatearPrecio(subtotal)}</span>
+                    </div>
+                    <div class="total-row grand-total">
+                        <span>TOTAL:</span>
+                        <span>$${formatearPrecio(totalFinal)}</span>
+                    </div>
+                </div>
+
+                <!-- Footer -->
+                <div class="ticket-footer">
+                    <div class="thank-you">¡GRACIAS POR SU COMPRA!</div>
+                    <div class="message">Vuelva pronto</div>
+                    <div class="message" style="margin-top: 10px; font-size: 11px;">
+                        Este ticket es válido como comprobante de compra
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('ticket').innerHTML = ticketHTML;
+        }
+
+        function formatearPrecio(valor) {
+            return new Intl.NumberFormat('es-CO', { minimumFractionDigits: 0 }).format(valor);
+        }
+
+        // Cargar al iniciar
+        window.addEventListener('load', cargarDatosPedido);
+    </script>
+</body>
+</html>

@@ -1,0 +1,3117 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Multi-Admin - Super Admin</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+body { background: #f8fafc; font-family: 'Segoe UI', system-ui, sans-serif; }
+.sidebar { min-height: 100vh; background: #1e293b; color: #e2e8f0; }
+.sidebar a { color: #cbd5e1; padding: 14px 20px; display: block; text-decoration: none; border-left: 3px solid transparent; transition: all 0.2s; }
+.sidebar a:hover, .sidebar a.active { background: #334155; border-left-color: #3b82f6; color: #fff; }
+.content { padding: 25px; }
+/* Buscador */
+.search-container {
+background: white;
+border-radius: 12px;
+padding: 16px 20px;
+margin-bottom: 20px;
+box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+}
+.search-box {
+position: relative;
+max-width: 500px;
+}
+.search-box input {
+padding-left: 45px;
+border-radius: 10px;
+border: 2px solid #e2e8f0;
+font-size: 0.95rem;
+transition: all 0.3s;
+}
+.search-box input:focus {
+border-color: #667eea;
+box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+}
+.search-box i {
+position: absolute;
+left: 16px;
+top: 50%;
+transform: translateY(-50%);
+color: #94a3b8;
+font-size: 1.1rem;
+}
+.search-stats {
+color: #64748b;
+font-size: 0.9rem;
+margin-top: 8px;
+}
+/* Tabla Compacta Unificada */
+.business-table {
+background: white;
+border-radius: 12px;
+overflow: hidden;
+box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+}
+.table-header {
+background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+padding: 16px 24px;
+border-bottom: 2px solid #cbd5e1;
+font-weight: 700;
+font-size: 0.8rem;
+text-transform: uppercase;
+letter-spacing: 0.5px;
+color: #475569;
+display: flex;
+align-items: center;
+gap: 20px;
+}
+.table-header > div {
+display: flex;
+align-items: center;
+gap: 6px;
+}
+.table-header i {
+font-size: 0.9rem;
+}
+.table-header .col-nombre {
+flex: 1.5;
+min-width: 250px;
+}
+.table-header .col-categoria {
+flex: 0.8;
+}
+.table-header .col-acciones {
+flex: 1;
+justify-content: flex-end;
+}
+.business-row {
+padding: 18px 24px;
+border-bottom: 1px solid #f1f5f9;
+transition: all 0.3s;
+display: flex;
+align-items: center;
+gap: 20px;
+}
+.business-row:hover {
+background: #f8fafc;
+transform: translateX(4px);
+}
+.business-row:last-child {
+border-bottom: none;
+}
+.business-logo-box {
+width: 56px;
+height: 56px;
+background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+border-radius: 12px;
+display: flex;
+align-items: center;
+justify-content: center;
+font-size: 1.6rem;
+box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+flex-shrink: 0;
+overflow: hidden;
+position: relative;
+}
+.business-logo-box img {
+width: 100%;
+height: 100%;
+object-fit: cover;
+}
+.business-info {
+flex: 1;
+min-width: 0;
+}
+.business-name {
+font-weight: 700;
+color: #1e293b;
+font-size: 1rem;
+margin-bottom: 4px;
+}
+.business-meta {
+color: #64748b;
+font-size: 0.85rem;
+display: flex;
+gap: 12px;
+flex-wrap: wrap;
+}
+.business-meta span {
+display: flex;
+align-items: center;
+gap: 4px;
+}
+.business-meta i {
+font-size: 0.8rem;
+color: #94a3b8;
+}
+.category-section {
+display: flex;
+align-items: center;
+gap: 8px;
+}
+.badge-tipo-compact {
+background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+color: white;
+padding: 6px 14px;
+border-radius: 20px;
+font-size: 0.82rem;
+font-weight: 600;
+white-space: nowrap;
+box-shadow: 0 2px 8px rgba(102, 126, 234, 0.25);
+}
+.status-indicator {
+display: flex;
+align-items: center;
+gap: 4px;
+font-size: 0.8rem;
+font-weight: 600;
+}
+.status-active { color: #166534; }
+.status-active i { color: #22c55e; }
+.status-inactive { color: #991b1b; }
+.status-inactive i { color: #ef4444; }
+.actions-section {
+display: flex;
+gap: 8px;
+flex-shrink: 0;
+}
+.btn-action-compact {
+padding: 8px 16px;
+border-radius: 8px;
+font-weight: 600;
+font-size: 0.85rem;
+border: none;
+transition: all 0.3s;
+display: inline-flex;
+align-items: center;
+gap: 6px;
+white-space: nowrap;
+}
+.btn-action-compact:hover {
+transform: translateY(-2px);
+box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+.btn-panel {
+background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+color: white;
+}
+.btn-app {
+background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+color: white;
+}
+.btn-credenciales {
+background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+color: white;
+}
+.no-results {
+text-align: center;
+padding: 60px 20px;
+color: #94a3b8;
+}
+.no-results i {
+font-size: 3rem;
+margin-bottom: 16px;
+opacity: 0.5;
+}
+.loading {
+text-align: center;
+padding: 40px;
+color: #64748b;
+}
+.empty-state {
+text-align: center;
+padding: 60px 20px;
+}
+.empty-state i {
+font-size: 4rem;
+color: #cbd5e1;
+margin-bottom: 20px;
+}
+.empty-state h5 {
+color: #64748b;
+margin-bottom: 8px;
+}
+.empty-state p {
+color: #94a3b8;
+}
+/* Modal Styles */
+.modal-content {
+border-radius: 20px;
+overflow: hidden;
+border: none;
+}
+.hover-shadow {
+transition: all 0.3s ease;
+}
+.hover-shadow:hover {
+transform: translateY(-2px);
+box-shadow: 0 10px 25px rgba(0,0,0,0.15) !important;
+}
+.form-control:focus {
+box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+border-color: #667eea;
+}
+.input-group-text {
+background-color: #f8fafc;
+}
+/* Logo Upload Styles */
+.logo-upload-container {
+border: 2px dashed #cbd5e1;
+border-radius: 12px;
+padding: 20px;
+text-align: center;
+background: #f8fafc;
+transition: all 0.3s;
+cursor: pointer;
+}
+.logo-upload-container:hover {
+border-color: #667eea;
+background: #f1f5f9;
+}
+.logo-upload-container.has-logo {
+border-color: #22c55e;
+background: #f0fdf4;
+}
+.logo-preview {
+width: 120px;
+height: 120px;
+border-radius: 12px;
+object-fit: cover;
+margin: 0 auto 12px;
+box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+.logo-placeholder {
+width: 120px;
+height: 120px;
+background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+border-radius: 12px;
+display: flex;
+align-items: center;
+justify-content: center;
+margin: 0 auto 12px;
+color: white;
+font-size: 3rem;
+}
+.logo-upload-text {
+color: #64748b;
+font-size: 0.9rem;
+margin-bottom: 8px;
+}
+.logo-upload-hint {
+color: #94a3b8;
+font-size: 0.8rem;
+}
+.btn-remove-logo {
+margin-top: 12px;
+padding: 6px 16px;
+background: #ef4444;
+color: white;
+border: none;
+border-radius: 8px;
+font-size: 0.85rem;
+cursor: pointer;
+transition: all 0.3s;
+}
+.btn-remove-logo:hover {
+background: #dc2626;
+transform: translateY(-1px);
+}
+@media (max-width: 1024px) {
+.business-row {
+flex-direction: column;
+align-items: flex-start;
+gap: 16px;
+}
+.table-header {
+display: none;
+}
+.actions-section {
+width: 100%;
+justify-content: flex-end;
+}
+}
+
+/* SEPARADOR ELEGANTE */
+.section-divider {
+  margin: 40px 0 30px;
+  position: relative;
+}
+
+.divider-line {
+  height: 2px;
+  background: linear-gradient(90deg, transparent 0%, #e2e8f0 50%, transparent 100%);
+  position: relative;
+}
+
+.divider-line::before {
+  content: '';
+  position: absolute;
+  top: -4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 8px;
+  height: 8px;
+  background: #667eea;
+  border-radius: 50%;
+  box-shadow: 0 0 10px rgba(102, 126, 234, 0.4);
+}
+
+.section-title-wrapper {
+  text-align: center;
+  position: relative;
+}
+
+.section-icon {
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 15px;
+  font-size: 1.8rem;
+  color: white;
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+  position: relative;
+}
+
+.section-icon::after {
+  content: '';
+  position: absolute;
+  top: -3px;
+  right: -3px;
+  width: 20px;
+  height: 20px;
+  background: #22c55e;
+  border-radius: 50%;
+  border: 3px solid white;
+  box-shadow: 0 2px 8px rgba(34, 197, 94, 0.4);
+}
+
+.section-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 5px;
+  letter-spacing: -0.5px;
+}
+
+.section-subtitle {
+  font-size: 0.95rem;
+  color: #64748b;
+  margin: 0;
+}
+
+/* STATS BADGE */
+.stats-badge {
+  background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+  padding: 10px 20px;
+  border-radius: 12px;
+  font-weight: 600;
+  color: #475569;
+  display: inline-flex;
+  align-items: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+.stats-badge i {
+  color: #667eea;
+}
+
+/* BOTÓN NUEVO NEGOCIO MEJORADO */
+.btn-new-negocio {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-new-negocio:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  color: white;
+}
+
+.btn-new-negocio:active {
+  transform: translateY(0);
+}
+
+/* ANIMACIÓN DE ENTRADA */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.section-divider {
+  animation: fadeInUp 0.6s ease-out;
+}
+</style>
+</head>
+<body>
+<!-- 🔐 Modal Login -->
+<div class="modal fade" id="authModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
+<div class="modal-dialog modal-dialog-centered">
+<div class="modal-content">
+<div class="modal-header bg-primary text-white">
+<h5 class="modal-title">🔐 Acceso Super Admin</h5>
+</div>
+<div class="modal-body">
+<form id="authForm">
+<div class="mb-3">
+<label class="form-label">Correo electrónico</label>
+<input type="email" id="authEmail" class="form-control" placeholder="admin@tudominio.com" required autocomplete="email">
+</div>
+<div class="mb-3">
+<label class="form-label">Contraseña</label>
+<div class="input-group">
+<input type="password" id="authPassword" class="form-control" required autocomplete="current-password">
+<button class="btn btn-outline-secondary" type="button" onclick="togglePassword()">
+<i class="fas fa-eye" id="toggleIcon"></i>
+</button>
+</div>
+</div>
+<button type="submit" class="btn btn-primary w-100" id="loginBtn">
+<i class="fas fa-sign-in-alt me-2"></i>Ingresar
+</button>
+</form>
+<div id="authError" class="alert alert-danger mt-3 d-none" role="alert"></div>
+<div class="text-center mt-3">
+<small class="text-muted">¿Olvidaste tu contraseña? <a href="#" onclick="resetPassword()">Recuperar</a></small>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- 🔑 Modal Credenciales Admin -->
+<div class="modal fade" id="credencialesModal" tabindex="-1" aria-hidden="true">
+<div class="modal-dialog modal-dialog-centered modal-xl">
+<div class="modal-content border-0 shadow-lg">
+<div class="modal-header border-0" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+<div class="d-flex align-items-center text-white">
+<div class="me-3" style="background: rgba(255,255,255,0.2); padding: 10px; border-radius: 12px;">
+<i class="fas fa-key fa-lg"></i>
+</div>
+<div>
+<h5 class="modal-title mb-0 fw-bold">🔑 Credenciales de Acceso</h5>
+<small class="opacity-75">Información confidencial del negocio</small>
+</div>
+</div>
+<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+<div class="modal-body p-4">
+<!-- Logo del Negocio en Modal - EDITABLE -->
+<div class="text-center mb-4 position-relative">
+<div id="credLogoContainer" class="business-logo-box mx-auto" style="width: 120px; height: 120px; font-size: 3rem; cursor: pointer;" onclick="document.getElementById('modalLogoInput').click()">
+<i class="fas fa-store"></i>
+</div>
+<input type="file" id="modalLogoInput" class="d-none" accept="image/*" onchange="cambiarLogoNegocio(this)">
+<button class="btn btn-sm btn-primary position-absolute"
+style="bottom: 0; right: 50%; transform: translateX(80px); border-radius: 20px; padding: 4px 12px;"
+onclick="document.getElementById('modalLogoInput').click()" title="Cambiar logo">
+<i class="fas fa-camera"></i> <small>Cambiar</small>
+</button>
+</div>
+<!-- Datos del Negocio - EDITABLE -->
+<div class="card border-0 mb-4" style="background: #f8fafc;">
+<div class="card-body p-3">
+<div class="d-flex justify-content-between align-items-center mb-3">
+<h6 class="fw-bold mb-0 text-primary">
+<i class="fas fa-building me-2"></i>Datos del Negocio
+</h6>
+<button class="btn btn-sm btn-outline-primary" onclick="editarDatosNegocio()" id="btnEditarNegocio">
+<i class="fas fa-edit"></i> Editar
+</button>
+</div>
+<!-- Vista Lectura -->
+<div id="negocioView">
+<div class="row g-3">
+<div class="col-md-6">
+<div class="d-flex align-items-start">
+<i class="fas fa-map-marker-alt text-muted me-2 mt-1"></i>
+<div>
+<small class="text-muted d-block">Dirección</small>
+<span class="fw-semibold" id="credDireccion">-</span>
+</div>
+</div>
+</div>
+<div class="col-md-6">
+<div class="d-flex align-items-start">
+<i class="fas fa-phone text-muted me-2 mt-1"></i>
+<div>
+<small class="text-muted d-block">Teléfono</small>
+<span class="fw-semibold" id="credTelefono">-</span>
+</div>
+</div>
+</div>
+<div class="col-md-6">
+<div class="d-flex align-items-start">
+<i class="fab fa-whatsapp text-success me-2 mt-1"></i>
+<div>
+<small class="text-muted d-block">WhatsApp</small>
+<span class="fw-semibold" id="credWhatsApp">-</span>
+</div>
+</div>
+</div>
+<div class="col-md-6">
+<div class="d-flex align-items-start">
+<i class="fas fa-calendar text-muted me-2 mt-1"></i>
+<div>
+<small class="text-muted d-block">Fecha de Creación</small>
+<span class="fw-semibold" id="credFechaCreacion">-</span>
+</div>
+</div>
+</div>
+<div class="col-12">
+<div class="d-flex align-items-start">
+<i class="fas fa-tag text-info me-2 mt-1"></i>
+<div>
+<small class="text-muted d-block">Tipo de Negocio</small>
+<span class="badge bg-primary bg-opacity-10 text-primary px-3 py-2 rounded-pill" id="credTipoNegocio">-</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Vista Edición -->
+<div id="negocioEdit" class="d-none">
+<div class="row g-3">
+<div class="col-md-6">
+<label class="form-label small">Dirección</label>
+<input type="text" class="form-control form-control-sm" id="editDireccion">
+</div>
+<div class="col-md-6">
+<label class="form-label small">Teléfono</label>
+<input type="text" class="form-control form-control-sm" id="editTelefono">
+</div>
+<div class="col-md-6">
+<label class="form-label small">WhatsApp</label>
+<input type="text" class="form-control form-control-sm" id="editWhatsApp">
+</div>
+<div class="col-md-6">
+<label class="form-label small">Tipo de Negocio</label>
+<select class="form-select form-select-sm" id="editTipoNegocio"></select>
+</div>
+<div class="col-12">
+<div class="d-flex gap-2 justify-content-end">
+<button class="btn btn-sm btn-secondary" onclick="cancelarEdicionNegocio()">
+<i class="fas fa-times"></i> Cancelar
+</button>
+<button class="btn btn-sm btn-primary" onclick="guardarDatosNegocio()">
+<i class="fas fa-save"></i> Guardar
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Membresía y Pagos -->
+<div class="card border-0 mb-4" style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);">
+<div class="card-body p-3">
+<div class="d-flex justify-content-between align-items-center mb-3">
+<h6 class="fw-bold mb-0 text-warning" style="color: #92400e !important;">
+<i class="fas fa-crown me-2"></i>Membresía y Suscripción
+</h6>
+<button class="btn btn-sm btn-outline-warning" onclick="editarMembresia()" id="btnEditarMembresia">
+<i class="fas fa-edit"></i> Editar
+</button>
+</div>
+<!-- Vista Lectura -->
+<div id="membresiaView">
+<div class="row g-3">
+<div class="col-md-4">
+<div class="d-flex align-items-start">
+<i class="fas fa-calendar-alt text-warning me-2 mt-1"></i>
+<div>
+<small class="text-muted d-block">Fecha de Instalación</small>
+<span class="fw-semibold" id="credFechaInstalacion">-</span>
+</div>
+</div>
+</div>
+<div class="col-md-4">
+<div class="d-flex align-items-start">
+<i class="fas fa-crown text-warning me-2 mt-1"></i>
+<div>
+<small class="text-muted d-block">Tipo de Membresía</small>
+<span class="badge bg-warning text-dark px-3 py-2 rounded-pill" id="credTipoMembresia">-</span>
+</div>
+</div>
+</div>
+<div class="col-md-4">
+<div class="d-flex align-items-start">
+<i class="fas fa-wallet text-success me-2 mt-1"></i>
+<div>
+<small class="text-muted d-block">Estado de Pago</small>
+<span class="fw-semibold" id="credEstadoPago">-</span>
+</div>
+</div>
+</div>
+<div class="col-md-6">
+<div class="d-flex align-items-start">
+<i class="fas fa-calendar-check text-info me-2 mt-1"></i>
+<div>
+<small class="text-muted d-block">Próximo Pago</small>
+<span class="fw-semibold" id="credProximoPago">-</span>
+</div>
+</div>
+</div>
+<div class="col-md-6">
+<div class="d-flex align-items-start">
+<i class="fas fa-history text-muted me-2 mt-1"></i>
+<div>
+<small class="text-muted d-block">Última Actualización</small>
+<span class="fw-semibold" id="credUltimaActualizacion">-</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Vista Edición -->
+<div id="membresiaEdit" class="d-none">
+<div class="row g-3">
+<div class="col-md-6">
+<label class="form-label small">📅 Fecha de Instalación</label>
+<input type="date" class="form-control form-control-sm" id="editFechaInstalacion">
+</div>
+<div class="col-md-6">
+<label class="form-label small">👑 Tipo de Membresía</label>
+<select class="form-select form-select-sm" id="editTipoMembresia">
+<option value="estandar">⭐ Estándar</option>
+<option value="premium">👑 Premium</option>
+<option value="enterprise">🚀 Enterprise</option>
+</select>
+</div>
+<div class="col-md-6">
+<label class="form-label small">💰 Estado de Pago</label>
+<select class="form-select form-select-sm" id="editEstadoPago">
+<option value="al_dia">✅ Al día</option>
+<option value="pendiente">⚠️ Pendiente</option>
+<option value="vencido">❌ Vencido</option>
+</select>
+</div>
+<div class="col-md-6">
+<label class="form-label small">📆 Próximo Pago</label>
+<input type="date" class="form-control form-control-sm" id="editProximoPago">
+</div>
+<div class="col-12">
+<div class="d-flex gap-2 justify-content-end">
+<button class="btn btn-sm btn-secondary" onclick="cancelarEdicionMembresia()">
+<i class="fas fa-times"></i> Cancelar
+</button>
+<button class="btn btn-sm btn-warning" onclick="guardarMembresia()">
+<i class="fas fa-save"></i> Guardar
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Credenciales de Acceso -->
+<div class="row g-3 mb-4">
+<div class="col-12">
+<div class="d-flex justify-content-between align-items-center mb-3">
+<h6 class="fw-bold mb-0 text-primary">
+<i class="fas fa-user-shield me-2"></i>Credenciales del Administrador
+</h6>
+<button class="btn btn-sm btn-outline-primary" onclick="editarCredenciales()" id="btnEditarCred">
+<i class="fas fa-edit"></i> Editar
+</button>
+</div>
+</div>
+<!-- Vista Lectura -->
+<div id="credencialesView" class="col-12">
+<div class="row g-3">
+<div class="col-md-6">
+<label class="form-label fw-semibold text-muted small">📧 Usuario (Email)</label>
+<div class="input-group">
+<span class="input-group-text bg-light border-end-0">
+<i class="fas fa-envelope text-primary"></i>
+</span>
+<input type="email" class="form-control border-start-0" id="credEmail" readonly
+style="background: #f8fafc; font-weight: 600;">
+<button class="btn btn-outline-primary" type="button" onclick="copiarEmail()"
+title="Copiar email">
+<i class="fas fa-copy"></i>
+</button>
+</div>
+</div>
+<div class="col-md-6">
+<label class="form-label fw-semibold text-muted small">🔐 Contraseña Temporal</label>
+<div class="input-group">
+<span class="input-group-text bg-light border-end-0">
+<i class="fas fa-lock text-success"></i>
+</span>
+<input type="text" class="form-control border-start-0" id="credPassword" readonly
+style="background: #f8fafc; font-weight: 600; font-family: monospace;">
+<button class="btn btn-outline-success" type="button" onclick="copiarContraseña()"
+title="Copiar contraseña">
+<i class="fas fa-copy"></i>
+</button>
+<button class="btn btn-outline-warning" type="button" onclick="generarNuevaContraseña()"
+title="Generar nueva contraseña">
+<i class="fas fa-sync-alt"></i>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Vista Edición -->
+<div id="credencialesEdit" class="col-12 d-none">
+<div class="row g-3">
+<div class="col-md-6">
+<label class="form-label fw-semibold text-muted small">📧 Usuario (Email)</label>
+<div class="input-group">
+<span class="input-group-text bg-light border-end-0">
+<i class="fas fa-envelope text-primary"></i>
+</span>
+<input type="email" class="form-control border-start-0" id="editEmail"
+style="background: #fff; font-weight: 600;" placeholder="email@ejemplo.com">
+</div>
+<small class="text-muted">⚠️ El usuario deberá verificar el nuevo correo</small>
+</div>
+<div class="col-md-6">
+<label class="form-label fw-semibold text-muted small">🔐 Contraseña Temporal</label>
+<div class="input-group">
+<span class="input-group-text bg-light border-end-0">
+<i class="fas fa-lock text-success"></i>
+</span>
+<input type="text" class="form-control border-start-0" id="editPassword"
+style="background: #fff; font-weight: 600; font-family: monospace;"
+placeholder="Mínimo 6 caracteres">
+<button class="btn btn-outline-warning" type="button" onclick="generarAleatoriaEdit()"
+title="Generar aleatoria">
+<i class="fas fa-sync-alt"></i>
+</button>
+</div>
+<small class="text-muted">Mínimo 6 caracteres</small>
+</div>
+<div class="col-12">
+<div class="d-flex gap-2 justify-content-end mt-3">
+<button class="btn btn-sm btn-secondary" onclick="cancelarEdicionCredenciales()">
+<i class="fas fa-times"></i> Cancelar
+</button>
+<button class="btn btn-sm btn-primary" onclick="guardarCredenciales()">
+<i class="fas fa-save"></i> Guardar Cambios
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<hr class="my-4">
+<!-- Enlaces de Acceso Destacados -->
+<h6 class="fw-bold mb-3 text-primary">
+<i class="fas fa-link me-2"></i>Enlaces de Acceso Directo
+</h6>
+<div class="row g-3">
+<!-- Panel de Administración -->
+<div class="col-12">
+<div class="card border-0 shadow-sm hover-shadow"
+style="background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);">
+<div class="card-body p-3">
+<div class="d-flex align-items-center justify-content-between">
+<div class="d-flex align-items-center flex-grow-1">
+<div class="me-3" style="background: #667eea; color: white; width: 45px; height: 45px;
+border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+<i class="fas fa-tachometer-alt fa-lg"></i>
+</div>
+<div class="flex-grow-1">
+<h6 class="mb-1 fw-bold">🖥️ Panel de Administración</h6>
+<small class="text-muted d-flex align-items-center">
+<i class="fas fa-info-circle me-1"></i>
+Acceso completo para el administrador
+</small>
+</div>
+</div>
+<div class="d-flex gap-2">
+<button class="btn btn-sm btn-light" onclick="copiarLink('panel')"
+title="Copiar enlace">
+<i class="fas fa-copy"></i> <span class="d-none d-md-inline">Copiar</span>
+</button>
+<a href="#" id="linkPanel" target="_blank" class="btn btn-sm"
+style="background: #667eea; color: white;">
+<i class="fas fa-external-link-alt"></i> <span class="d-none d-md-inline">Abrir</span>
+</a>
+</div>
+</div>
+<div class="mt-2">
+<input type="text" class="form-control form-control-sm" id="credPanelLink" readonly
+style="background: rgba(255,255,255,0.5); font-size: 0.85rem; border: none;">
+</div>
+</div>
+</div>
+</div>
+<!-- App del Cliente -->
+<div class="col-12">
+<div class="card border-0 shadow-sm hover-shadow"
+style="background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);">
+<div class="card-body p-3">
+<div class="d-flex align-items-center justify-content-between">
+<div class="d-flex align-items-center flex-grow-1">
+<div class="me-3" style="background: #f093fb; color: white; width: 45px; height: 45px;
+border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+<i class="fas fa-mobile-alt fa-lg"></i>
+</div>
+<div class="flex-grow-1">
+<h6 class="mb-1 fw-bold">📱 App del Cliente</h6>
+<small class="text-muted d-flex align-items-center">
+<i class="fas fa-info-circle me-1"></i>
+Interfaz para clientes finales
+</small>
+</div>
+</div>
+<div class="d-flex gap-2">
+<button class="btn btn-sm btn-light" onclick="copiarLink('app')"
+title="Copiar enlace">
+<i class="fas fa-copy"></i> <span class="d-none d-md-inline">Copiar</span>
+</button>
+<a href="#" id="linkApp" target="_blank" class="btn btn-sm"
+style="background: #f093fb; color: white;">
+<i class="fas fa-external-link-alt"></i> <span class="d-none d-md-inline">Abrir</span>
+</a>
+</div>
+</div>
+<div class="mt-2">
+<input type="text" class="form-control form-control-sm" id="credAppLink" readonly
+style="background: rgba(255,255,255,0.5); font-size: 0.85rem; border: none;">
+</div>
+</div>
+</div>
+</div>
+<!-- Punto de Venta (POS) -->
+<div class="col-12">
+<div class="card border-0 shadow-sm hover-shadow"
+style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);">
+<div class="card-body p-3">
+<div class="d-flex align-items-center justify-content-between">
+<div class="d-flex align-items-center flex-grow-1">
+<div class="me-3" style="background: #fd79a8; color: white; width: 45px; height: 45px;
+border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+<i class="fas fa-cash-register fa-lg"></i>
+</div>
+<div class="flex-grow-1">
+<h6 class="mb-1 fw-bold">🖥️ Punto de Venta (POS)</h6>
+<small class="text-muted d-flex align-items-center">
+<i class="fas fa-info-circle me-1"></i>
+Interfaz para ventas y cobros
+</small>
+</div>
+</div>
+<div class="d-flex gap-2">
+<button class="btn btn-sm btn-light" onclick="copiarLink('pos')"
+title="Copiar enlace">
+<i class="fas fa-copy"></i> <span class="d-none d-md-inline">Copiar</span>
+</button>
+<a href="#" id="linkPos" target="_blank" class="btn btn-sm"
+style="background: #fd79a8; color: white;">
+<i class="fas fa-external-link-alt"></i> <span class="d-none d-md-inline">Abrir</span>
+</a>
+</div>
+</div>
+<div class="mt-2">
+<input type="text" class="form-control form-control-sm" id="credPosLink" readonly
+style="background: rgba(255,255,255,0.5); font-size: 0.85rem; border: none;">
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Alerta Importante -->
+<div class="alert mt-4 mb-0" style="background: #fff3cd; border-left: 4px solid #ffc107;">
+<div class="d-flex align-items-start">
+<i class="fas fa-exclamation-triangle text-warning me-2 mt-1 fa-lg"></i>
+<div>
+<h6 class="fw-bold mb-1 text-warning">⚠️ Importante</h6>
+<small class="text-dark">
+Comparte estas credenciales <strong>únicamente</strong> con el dueño del negocio.
+Recomendamos que el administrador cambie la contraseña después del primer acceso.
+</small>
+</div>
+</div>
+</div>
+</div>
+<div class="modal-footer border-0 justify-content-between p-4 pt-0" style="flex-direction: column; gap: 12px;">
+<button type="button" class="btn btn-success w-100" onclick="enviarCredencialesWhatsApp()"
+style="background: linear-gradient(135deg, #25d366 0%, #128c7e 100%); border: none; padding: 14px; font-weight: 700; font-size: 1.05em; box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);">
+<i class="fab fa-whatsapp me-2"></i>📱 Enviar Credenciales al Cliente por WhatsApp
+</button>
+<hr class="w-100 my-2" style="opacity: 0.2;">
+<div class="d-flex justify-content-between w-100">
+<button type="button" class="btn btn-secondary px-4" data-bs-dismiss="modal">
+<i class="fas fa-times me-2"></i>Cerrar
+</button>
+<div class="d-flex gap-2">
+<button type="button" class="btn btn-warning" onclick="generarNuevaContraseña()">
+<i class="fas fa-sync-alt me-2"></i>Generar Aleatoria
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Toast Notification -->
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+<div id="credencialesToast" class="toast align-items-center text-white bg-success border-0" role="alert">
+<div class="d-flex">
+<div class="toast-body">
+<i class="fas fa-check-circle me-2"></i>
+<span id="toastMessage">Operación exitosa</span>
+</div>
+<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+</div>
+</div>
+</div>
+<!-- ✨ Modal: Crear/Editar Tipo de Negocio -->
+<div class="modal fade" id="newTipoModal" tabindex="-1">
+<div class="modal-dialog modal-lg modal-dialog-scrollable">
+<div class="modal-content">
+<div class="modal-header bg-success text-white">
+<h5 class="modal-title"> Gestionar Tipos de Negocio</h5>
+<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+</div>
+<div class="modal-body">
+<div class="mb-4">
+<h6 class="mb-2"> Tipos Existentes</h6>
+<div id="tiposList" class="d-flex flex-wrap gap-2">
+<div class="loading small">Cargando...</div>
+</div>
+</div>
+<hr>
+<h6 class="mb-3"> Crear Nuevo Tipo</h6>
+<form id="formNuevoTipo">
+<input type="hidden" id="editTipoKey">
+<div class="row g-3">
+<div class="col-md-4">
+<label class="form-label">ID del Tipo *</label>
+<input type="text" id="tipoId" class="form-control" placeholder="ej: alquileres_para_eventos" required pattern="[a-z_]+" disabled>
+<small class="text-muted">Solo letras minúsculas y guiones bajos</small>
+</div>
+<div class="col-md-4">
+<label class="form-label">Nombre Visible *</label>
+<input type="text" id="tipoNombre" class="form-control" placeholder="ej: Alquileres para Eventos" required>
+</div>
+<div class="col-md-4">
+<label class="form-label">Icono (emoji)</label>
+<input type="text" id="tipoIcono" class="form-control" placeholder="🎪" maxlength="2" value="">
+</div>
+<div class="col-md-6">
+<label class="form-label">Color Primario</label>
+<input type="color" id="tipoColor1" class="form-control form-control-color w-100" value="#4ECDC4">
+</div>
+<div class="col-md-6">
+<label class="form-label">Color Secundario</label>
+<input type="color" id="tipoColor2" class="form-control form-control-color w-100" value="#44A3AA">
+</div>
+<div class="col-12">
+<label class="form-label">Módulos a Habilitar</label>
+<div class="modulo-group">
+<h6>📦 Core</h6>
+<div class="row">
+<div class="col-md-3"><div class="form-check"><input class="form-check-input modulo-check" type="checkbox" value="dashboard" checked disabled><label class="form-check-label">Dashboard</label></div></div>
+<div class="col-md-3"><div class="form-check"><input class="form-check-input modulo-check" type="checkbox" value="productos" checked><label class="form-check-label">Productos</label></div></div>
+<div class="col-md-3"><div class="form-check"><input class="form-check-input modulo-check" type="checkbox" value="categorias" checked><label class="form-check-label">Categorías</label></div></div>
+<div class="col-md-3"><div class="form-check"><input class="form-check-input modulo-check" type="checkbox" value="clientes" checked><label class="form-check-label">Clientes</label></div></div>
+</div>
+</div>
+<div class="modulo-group">
+<h6>👥 Gestión</h6>
+<div class="row">
+<div class="col-md-3"><div class="form-check"><input class="form-check-input modulo-check" type="checkbox" value="empleados" checked><label class="form-check-label">Empleados</label></div></div>
+<div class="col-md-3"><div class="form-check"><input class="form-check-input modulo-check" type="checkbox" value="reportes" checked><label class="form-check-label">Reportes</label></div></div>
+<div class="col-md-3"><div class="form-check"><input class="form-check-input modulo-check" type="checkbox" value="config" checked disabled><label class="form-check-label">Configuración</label></div></div>
+<div class="col-md-3"><div class="form-check"><input class="form-check-input modulo-check" type="checkbox" value="inventario"><label class="form-check-label">Inventario</label></div></div>
+</div>
+</div>
+<div class="modulo-group">
+<h6>📅 Operaciones</h6>
+<div class="row">
+<div class="col-md-3"><div class="form-check"><input class="form-check-input modulo-check" type="checkbox" value="agenda"><label class="form-check-label">Agenda</label></div></div>
+<div class="col-md-3"><div class="form-check"><input class="form-check-input modulo-check" type="checkbox" value="pedidos"><label class="form-check-label">Pedidos</label></div></div>
+<div class="col-md-3"><div class="form-check"><input class="form-check-input modulo-check" type="checkbox" value="delivery"><label class="form-check-label">Delivery</label></div></div>
+<div class="col-md-3"><div class="form-check"><input class="form-check-input modulo-check" type="checkbox" value="cotizaciones"><label class="form-check-label">Cotizaciones</label></div></div>
+</div>
+</div>
+<div class="modulo-group">
+<h6>🏪 Específicos</h6>
+<div class="row">
+<div class="col-md-3"><div class="form-check"><input class="form-check-input modulo-check" type="checkbox" value="mesas"><label class="form-check-label">Mesas</label></div></div>
+<div class="col-md-3"><div class="form-check"><input class="form-check-input modulo-check" type="checkbox" value="comandas"><label class="form-check-label">Comandas</label></div></div>
+<div class="col-md-3"><div class="form-check"><input class="form-check-input modulo-check" type="checkbox" value="punto_venta"><label class="form-check-label">Punto Venta</label></div></div>
+<div class="col-md-3"><div class="form-check"><input class="form-check-input modulo-check" type="checkbox" value="fidelizacion"><label class="form-check-label">Fidelización</label></div></div>
+</div>
+</div>
+</div>
+<div class="col-md-6">
+<label class="form-label">Campos Extra - Productos</label>
+<input type="text" id="camposProducto" class="form-control" placeholder="ej: precioPorDia,depositoGarantia">
+<small class="text-muted">Separa con comas (sin espacios)</small>
+</div>
+<div class="col-md-6">
+<label class="form-label">Campos Extra - Pedidos</label>
+<input type="text" id="camposPedido" class="form-control" placeholder="ej: fechaInicio,fechaFin">
+<small class="text-muted">Separa con comas (sin espacios)</small>
+</div>
+</div>
+</form>
+</div>
+<div class="modal-footer">
+<button type="button" class="btn btn-outline-danger" id="btnDeleteTipo" style="display: none;" onclick="eliminarTipo()">🗑️ Eliminar</button>
+<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+<button type="button" class="btn btn-secondary" onclick="limpiarFormTipo()">🔄 Limpiar</button>
+<button type="submit" form="formNuevoTipo" class="btn btn-success">💾 Guardar Tipo</button>
+</div>
+</div>
+</div>
+</div>
+<div class="container-fluid p-0">
+<div class="row g-0">
+<!-- Sidebar -->
+<div class="col-md-2 sidebar p-0">
+<h4 class="p-3 text-center border-bottom border-secondary">🏢 Multi-Admin</h4>
+<nav class="mt-2">
+<a href="#" class="nav-link active" data-tab="negocios"> Negocios</a>
+<a href="#" class="nav-link" data-tab="tipos" id="linkTipos">🧩 Tipos de Negocio</a>
+<a href="#" class="nav-link text-danger mt-4" id="logoutBtn"> Cerrar Sesión</a>
+</nav>
+</div>
+<!-- Contenido -->
+<div class="col-md-10 content">
+<!-- FIN SECCIÓN EMPRESA -->
+<!-- Vista: Negocios -->
+<div id="view-negocios" class="view-section">
+<!-- SECCIÓN: INFORMACIÓN DE LA EMPRESA MULTI-ADMIN -->
+<div class="container-fluid p-0 mb-4">
+<div class="card border-0 shadow-sm">
+<div class="card-header bg-gradient-primary text-white py-3" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+<div class="d-flex justify-content-between align-items-center">
+<div>
+<h5 class="mb-0"><i class="fas fa-building me-2"></i>Información de la Empresa</h5>
+<small class="opacity-75">Datos de Multi-Admin Platform</small>
+</div>
+<button class="btn btn-light btn-sm" onclick="editarEmpresa()" id="btnEditarEmpresa">
+<i class="fas fa-edit me-1"></i>Editar Información
+</button>
+</div>
+</div>
+<div class="card-body p-4">
+<!-- VISTA DE LECTURA -->
+<div id="empresaView">
+<div class="row align-items-center">
+<div class="col-md-3 text-center">
+<div id="empresaLogoContainer" class="business-logo-box mx-auto mb-3" style="width: 120px; height: 120px; font-size: 3rem;">
+<i class="fas fa-building"></i>
+</div>
+</div>
+<div class="col-md-9">
+<div class="row g-3">
+<div class="col-md-6">
+<div class="d-flex align-items-start">
+<i class="fas fa-building text-primary me-2 mt-1"></i>
+<div>
+<small class="text-muted d-block">Nombre de la Empresa</small>
+<span class="fw-semibold fs-5" id="empresaNombre">-</span>
+</div>
+</div>
+</div>
+<div class="col-md-6">
+<div class="d-flex align-items-start">
+<i class="fas fa-phone text-success me-2 mt-1"></i>
+<div>
+<small class="text-muted d-block">Celular / Teléfono</small>
+<span class="fw-semibold" id="empresaCelular">-</span>
+</div>
+</div>
+</div>
+<div class="col-md-6">
+<div class="d-flex align-items-start">
+<i class="fas fa-envelope text-info me-2 mt-1"></i>
+<div>
+<small class="text-muted d-block">Email de Contacto</small>
+<span class="fw-semibold" id="empresaEmail">-</span>
+</div>
+</div>
+</div>
+<div class="col-md-6">
+<div class="d-flex align-items-start">
+<i class="fas fa-map-marker-alt text-danger me-2 mt-1"></i>
+<div>
+<small class="text-muted d-block">Ubicación</small>
+<span class="fw-semibold" id="empresaUbicacion">-</span>
+</div>
+</div>
+</div>
+<div class="col-12">
+<div class="d-flex align-items-start">
+<i class="fas fa-align-left text-secondary me-2 mt-1"></i>
+<div>
+<small class="text-muted d-block">Descripción</small>
+<p class="mb-0 fw-semibold" id="empresaDescripcion">-</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- VISTA DE EDICIÓN -->
+<div id="empresaEdit" class="d-none">
+<form id="formEmpresa">
+<div class="row g-3">
+<div class="col-md-4 text-center">
+<div class="logo-upload-container mb-3" id="empresaLogoUploadContainer" onclick="document.getElementById('empresaLogoInput').click()">
+<div id="empresaLogoPreviewContainer">
+<div class="logo-placeholder">
+<i class="fas fa-building"></i>
+</div>
+</div>
+<div class="logo-upload-text">
+<strong>Click para cambiar logo</strong>
+</div>
+<input type="file" id="empresaLogoInput" class="d-none" accept="image/*" onchange="previewEmpresaLogo(this)">
+</div>
+<button type="button" class="btn btn-sm btn-danger" id="btnEliminarLogoEmpresa" onclick="eliminarLogoEmpresa()" style="display: none;">
+<i class="fas fa-trash me-1"></i>Eliminar Logo
+</button>
+</div>
+<div class="col-md-8">
+<div class="row g-3">
+<div class="col-12">
+<label class="form-label fw-semibold">📛 Nombre de la Empresa *</label>
+<input type="text" id="editEmpresaNombre" class="form-control" required>
+</div>
+<div class="col-md-6">
+<label class="form-label fw-semibold">📱 Celular / Teléfono *</label>
+<input type="tel" id="editEmpresaCelular" class="form-control" required>
+</div>
+<div class="col-md-6">
+<label class="form-label fw-semibold">📧 Email de Contacto *</label>
+<input type="email" id="editEmpresaEmail" class="form-control" required>
+</div>
+<div class="col-12">
+<label class="form-label fw-semibold">📍 Ubicación</label>
+<input type="text" id="editEmpresaUbicacion" class="form-control">
+</div>
+<div class="col-12">
+<label class="form-label fw-semibold">📝 Descripción</label>
+<textarea id="editEmpresaDescripcion" class="form-control" rows="3"></textarea>
+</div>
+</div>
+</div>
+</div>
+<div class="d-flex justify-content-end gap-2 mt-4">
+<button type="button" class="btn btn-secondary" onclick="cancelarEdicionEmpresa()">
+<i class="fas fa-times me-2"></i>Cancelar
+</button>
+<button type="submit" class="btn btn-primary">
+<i class="fas fa-save me-2"></i>Guardar Cambios
+</button>
+</div>
+</form>
+</div>
+</div>
+</div>
+</div>
+
+<!-- SEPARADOR ELEGANTE -->
+<div class="section-divider mb-4">
+  <div class="container-fluid px-0">
+    <div class="row align-items-center">
+      <div class="col">
+        <div class="divider-line"></div>
+      </div>
+      <div class="col-auto px-4">
+        <div class="section-title-wrapper">
+          <div class="section-icon">
+            <i class="fas fa-store"></i>
+          </div>
+          <h3 class="section-title">Gestión de Negocios</h3>
+          <p class="section-subtitle">Administra todos tus negocios desde aquí</p>
+        </div>
+      </div>
+      <div class="col">
+        <div class="divider-line"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- BOTÓN NUEVO NEGOCIO MEJORADO -->
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div class="stats-badge">
+    <i class="fas fa-chart-line me-2"></i>
+    <span id="totalNegocios">0</span> negocios registrados
+  </div>
+  <button class="btn btn-new-negocio" data-bs-toggle="modal" data-bs-target="#newNegocioModal">
+    <i class="fas fa-plus-circle me-2"></i>Nuevo Negocio
+  </button>
+</div>
+
+<!--  BUSCADOR -->
+<div class="search-container">
+<div class="row align-items-center">
+<div class="col-md-6">
+<div class="search-box">
+<i class="fas fa-search"></i>
+<input type="text" id="searchInput" class="form-control" placeholder="Buscar por nombre, email o dirección...">
+</div>
+<div class="search-stats" id="searchStats"></div>
+</div>
+<div class="col-md-6 text-end">
+<button class="btn btn-outline-secondary btn-sm" onclick="clearSearch()">
+<i class="fas fa-times me-1"></i>Limpiar búsqueda
+</button>
+</div>
+</div>
+</div>
+<!-- 📊 TABLA COMPACTA UNIFICADA -->
+<div class="table-header">
+<div class="col-nombre">
+<i class="fas fa-store text-primary"></i>
+<span>Nombre Negocio</span>
+</div>
+<div class="col-categoria">
+<i class="fas fa-tag text-success"></i>
+<span>Categoría</span>
+</div>
+<div class="col-membresia" style="flex: 0.9;">
+<i class="fas fa-crown text-warning"></i>
+<span>Membresía</span>
+</div>
+<div class="col-factura" style="flex: 0.7;">
+<i class="fas fa-file-invoice text-info"></i>
+<span>Imprimir Factura</span>
+</div>
+<div class="col-acciones">
+<i class="fas fa-cogs text-info"></i>
+<span>Acciones</span>
+</div>
+</div>
+<!-- Body (Dinámico) -->
+<div id="negociosList" class="loading">
+<div class="text-center py-5">
+<div class="spinner-border text-primary" role="status"></div>
+<p class="mt-2 text-muted">Cargando negocios...</p>
+</div>
+</div>
+</div>
+<!-- Vista: Tipos de Negocio -->
+<div id="view-tipos" class="view-section d-none">
+<div class="d-flex justify-content-between align-items-center mb-4">
+<h3> Tipos de Negocio Disponibles</h3>
+<button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#newTipoModal" onclick="limpiarFormTipo()">➕ Agregar Tipo</button>
+</div>
+<div class="alert alert-info">
+<small>💡 Los tipos creados aquí aparecerán automáticamente en el selector al crear un nuevo negocio.</small>
+</div>
+<div id="tiposGrid" class="row g-3">
+<div class="loading">Cargando tipos...</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Modal Nuevo Negocio -->
+<div class="modal fade" id="newNegocioModal" tabindex="-1">
+<div class="modal-dialog modal-lg">
+<div class="modal-content">
+<div class="modal-header">
+<h5 class="modal-title">Crear Nuevo Negocio + Cuenta Dueño</h5>
+<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+</div>
+<form id="formNegocio">
+<div class="modal-body">
+<h6 class="mb-3 text-primary">🏪 Datos del Negocio</h6>
+<div class="row g-3">
+<div class="col-md-6">
+<label class="form-label">Nombre del Negocio *</label>
+<input type="text" id="negocioNombre" class="form-control" required>
+</div>
+<div class="col-md-6">
+<label class="form-label">Tipo de Negocio *</label>
+<select id="negocioTipo" class="form-select" required>
+<option value="">Cargando tipos...</option>
+</select>
+<small class="text-muted"><a href="#" onclick="abrirModalTipos(event)">¿No ves tu tipo? Agregar nuevo</a></small>
+</div>
+<div class="col-md-6">
+<label class="form-label">Dirección</label>
+<input type="text" id="negocioDireccion" class="form-control">
+</div>
+<div class="col-md-6">
+<label class="form-label">Teléfono</label>
+<input type="tel" id="negocioTelefono" class="form-control">
+</div>
+<div class="col-md-6">
+<label class="form-label">WhatsApp (con código país) *</label>
+<input type="text" id="negocioWhatsApp" class="form-control" placeholder="573001234567" required>
+</div>
+<div class="col-md-6">
+<label class="form-label">Tema Visual</label>
+<select id="negocioTema" class="form-select">
+<option value="light">⚪ Claro</option>
+<option value="dark">⚫ Oscuro</option>
+<option value="primary">🔵 Color principal</option>
+</select>
+</div>
+<!-- Logo del Negocio -->
+<div class="col-12">
+<label class="form-label">🖼️ Logo del Negocio</label>
+<div class="logo-upload-container" id="logoUploadContainer" onclick="document.getElementById('negocioLogo').click()">
+<div id="logoPreviewContainer">
+<div class="logo-placeholder">
+<i class="fas fa-store"></i>
+</div>
+</div>
+<div class="logo-upload-text">
+<strong>Haz clic para subir un logo</strong><br>
+<span class="logo-upload-hint">PNG, JPG o GIF (Máx. 2MB)</span>
+</div>
+<input type="file" id="negocioLogo" class="d-none" accept="image/*" onchange="previewLogo(this)">
+</div>
+<button type="button" class="btn-remove-logo d-none" id="btnRemoveLogo" onclick="removeLogo(event)">
+<i class="fas fa-trash me-2"></i>Eliminar Logo
+</button>
+</div>
+</div>
+<hr class="my-4">
+<h6 class="mb-3 text-success">👤 Datos del Dueño/Administrador</h6>
+<div class="row g-3">
+<div class="col-md-6">
+<label class="form-label">Nombre completo *</label>
+<input type="text" id="ownerName" class="form-control" required>
+</div>
+<div class="col-md-6">
+<label class="form-label">Correo electrónico *</label>
+<input type="email" id="ownerEmail" class="form-control" placeholder="dueño@negocio.com" required>
+</div>
+<div class="col-md-12">
+<label class="form-label">Contraseña temporal *</label>
+<input type="password" id="ownerPassword" class="form-control" minlength="6" placeholder="Mínimo 6 caracteres" required>
+<div class="form-text">El dueño podrá cambiarla después</div>
+</div>
+</div>
+<div class="alert alert-info mt-3 mb-0">
+<strong>ℹ️ Info:</strong> Se creará automáticamente la cuenta del dueño y se le enviarán las credenciales.
+</div>
+</div>
+<div class="modal-footer">
+<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+<button type="submit" class="btn btn-success">💾 Crear Negocio + Cuenta</button>
+</div>
+</form>
+</div>
+</div>
+</div>
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
+<script src="config_admin.js"></script>
+<script src="config_negocios.js"></script>
+<script>
+// ==================== VARIABLES GLOBALES ====================
+let authModal;
+let credencialesModal;
+let newTipoModal;
+let superAdminCredentials = { email: '', password: '' };
+let negociosList = [];
+let filteredNegocios = [];
+let currentNegocioId = null;
+let currentOwnerUid = null;
+let tiposNegocios = {};
+let currentLogoFile = null;
+let currentLogoUrl = null;
+// ==================== FUNCIONES AUXILIARES GLOBALES ====================
+window.showError = function(message) {
+const errorDiv = document.getElementById('authError');
+if (errorDiv) {
+errorDiv.innerHTML = '<i class="fas fa-exclamation-circle me-2"></i>' + message;
+errorDiv.classList.remove('d-none');
+}
+const loginBtn = document.getElementById('loginBtn');
+if (loginBtn) {
+loginBtn.disabled = false;
+loginBtn.innerHTML = '<i class="fas fa-sign-in-alt me-2"></i>Ingresar';
+}
+};
+window.hideError = function() {
+const errorDiv = document.getElementById('authError');
+if (errorDiv) {
+errorDiv.classList.add('d-none');
+}
+};
+window.togglePassword = function() {
+const passwordInput = document.getElementById('authPassword');
+const toggleIcon = document.getElementById('toggleIcon');
+if (passwordInput.type === 'password') {
+passwordInput.type = 'text';
+toggleIcon.classList.remove('fa-eye');
+toggleIcon.classList.add('fa-eye-slash');
+} else {
+passwordInput.type = 'password';
+toggleIcon.classList.remove('fa-eye-slash');
+toggleIcon.classList.add('fa-eye');
+}
+};
+window.resetPassword = async function() {
+const email = document.getElementById('authEmail').value;
+if (!email) {
+alert('Por favor ingresa tu correo electrónico primero');
+return;
+}
+try {
+await auth.sendPasswordResetEmail(email);
+alert('✅ Se ha enviado un correo para restablecer tu contraseña');
+} catch (error) {
+alert('❌ Error: ' + error.message);
+}
+};
+// ==================== FUNCIONES DE SLUG ====================
+function nombreASlug(nombre) {
+if (!nombre || typeof nombre !== 'string') {
+return 'negocio-' + Date.now();
+}
+return nombre.toLowerCase()
+.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+.replace(/[^\w\s-]/g, '')
+.trim()
+.replace(/\s+/g, '-');
+}
+async function buscarNegocioPorSlug(slug) {
+const snapshot = await db.ref('negocios').once('value');
+let negocioEncontrado = null;
+let negocioId = null;
+snapshot.forEach(child => {
+const negocio = child.val();
+if (negocio && negocio.nombre) {
+const negocioSlug = nombreASlug(negocio.nombre);
+if (negocioSlug === slug) {
+negocioEncontrado = negocio;
+negocioId = child.key;
+}
+}
+});
+return { id: negocioId, data: negocioEncontrado };
+}
+// ==================== TOAST NOTIFICATION ====================
+function showToast(message, type = 'success') {
+const toastEl = document.getElementById('credencialesToast');
+const toastMessage = document.getElementById('toastMessage');
+toastEl.className = `toast align-items-center text-white border-0 bg-${type}`;
+toastMessage.textContent = message;
+const toast = new bootstrap.Toast(toastEl, { delay: 3000 });
+toast.show();
+}
+// ==================== INICIALIZACIÓN ====================
+document.addEventListener('DOMContentLoaded', function() {
+console.log('🚀 Inicializando Multi-Admin...');
+// Inicializar modales
+authModal = new bootstrap.Modal(document.getElementById('authModal'));
+credencialesModal = new bootstrap.Modal(document.getElementById('credencialesModal'));
+newTipoModal = new bootstrap.Modal(document.getElementById('newTipoModal'));
+// Configurar form de login
+const authForm = document.getElementById('authForm');
+if (authForm) {
+authForm.addEventListener('submit', handleLogin);
+}
+// Configurar logout
+const logoutBtn = document.getElementById('logoutBtn');
+if (logoutBtn) {
+logoutBtn.addEventListener('click', handleLogout);
+}
+// Configurar navegación
+document.querySelectorAll('.nav-link[data-tab]').forEach(link => {
+link.addEventListener('click', (e) => {
+e.preventDefault();
+const tab = e.currentTarget.dataset.tab;
+document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+e.currentTarget.classList.add('active');
+document.querySelectorAll('.view-section').forEach(v => v.classList.add('d-none'));
+document.getElementById(`view-${tab}`).classList.remove('d-none');
+if (tab === 'tipos') cargarVistaTipos();
+});
+});
+// Configurar buscador
+document.getElementById('searchInput').addEventListener('input', function(e) {
+const searchTerm = e.target.value.toLowerCase().trim();
+if (searchTerm === '') {
+filteredNegocios = [...negociosList];
+} else {
+filteredNegocios = negociosList.filter(negocio => {
+const nombre = negocio.nombre.toLowerCase();
+const email = (negocio.ownerEmail || '').toLowerCase();
+const direccion = (negocio.direccion || '').toLowerCase();
+const tipo = (negocio.tipoNombre || '').toLowerCase();
+return nombre.includes(searchTerm) ||
+email.includes(searchTerm) ||
+direccion.includes(searchTerm) ||
+tipo.includes(searchTerm);
+});
+}
+renderNegocios(filteredNegocios);
+updateSearchStats();
+});
+// Configurar form de nuevo tipo
+document.getElementById('formNuevoTipo').addEventListener('submit', handleNuevoTipo);
+// Configurar form de nuevo negocio
+document.getElementById('formNegocio').addEventListener('submit', handleNuevoNegocio);
+console.log('✅ Inicialización completada');
+});
+// ==================== AUTH ====================
+auth.onAuthStateChanged(async user => {
+if (user) {
+console.log('✅ Usuario autenticado:', user.email, 'UID:', user.uid);
+try {
+const adminSnap = await db.ref(`super_admins/${user.uid}`).once('value');
+if (adminSnap.exists()) {
+console.log('✅ Super Admin verificado');
+superAdminCredentials = { email: user.email, password: '' };
+authModal.hide();
+hideError();
+await cargarTiposNegocios();
+await loadNegocios();
+} else {
+console.warn('⚠️ UID no encontrado en super_admins. UID:', user.uid);
+const allAdmins = await db.ref('super_admins').once('value');
+allAdmins.forEach(child => {
+console.log('  - UID:', child.key, 'Email:', child.val().email);
+});
+showError(' Acceso denegado. UID no registrado como super admin.');
+await auth.signOut();
+}
+} catch (error) {
+console.error('❌ Error verificando admin:', error);
+showError('Error de verificación: ' + error.message);
+}
+} else {
+console.log('🔒 No hay sesión activa - Mostrando modal');
+setTimeout(() => {
+authModal.show();
+}, 300);
+}
+});
+async function handleLogin(e) {
+e.preventDefault();
+const email = document.getElementById('authEmail').value.trim();
+const password = document.getElementById('authPassword').value;
+const loginBtn = document.getElementById('loginBtn');
+const originalBtnHTML = loginBtn.innerHTML;
+if (!email || !password) {
+showError('❌ Por favor ingresa correo y contraseña');
+return;
+}
+loginBtn.disabled = true;
+loginBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Verificando...';
+hideError();
+try {
+console.log('🔐 Intentando login con:', email);
+const userCredential = await auth.signInWithEmailAndPassword(email, password);
+const user = userCredential.user;
+console.log('✅ Login exitoso. UID:', user.uid);
+} catch (error) {
+console.error('❌ Error de login:', error);
+let errorMessage = 'Error al iniciar sesión';
+switch (error.code) {
+case 'auth/user-not-found':
+errorMessage = '❌ Usuario no encontrado';
+break;
+case 'auth/wrong-password':
+errorMessage = '❌ Contraseña incorrecta';
+break;
+case 'auth/invalid-email':
+errorMessage = '❌ Correo inválido';
+break;
+case 'auth/user-disabled':
+errorMessage = '❌ Cuenta deshabilitada';
+break;
+case 'auth/too-many-requests':
+errorMessage = '⚠️ Demasiados intentos. Intenta más tarde';
+break;
+default:
+errorMessage = '❌ ' + error.message;
+}
+showError(errorMessage);
+}
+}
+async function handleLogout() {
+if (confirm('¿Cerrar sesión?')) {
+try {
+await auth.signOut();
+superAdminCredentials = { email: '', password: '' };
+location.reload();
+} catch (error) {
+alert('Error al cerrar sesión: ' + error.message);
+}
+}
+}
+// ==================== NAVEGACIÓN ====================
+function abrirModalTipos(e) {
+e.preventDefault();
+document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+document.getElementById('linkTipos').classList.add('active');
+document.querySelectorAll('.view-section').forEach(v => v.classList.add('d-none'));
+document.getElementById('view-tipos').classList.remove('d-none');
+limpiarFormTipo();
+newTipoModal.show();
+}
+// ==================== LOGO UPLOAD ====================
+window.previewLogo = function(input) {
+if (input.files && input.files[0]) {
+const file = input.files[0];
+if (file.size > 2 * 1024 * 1024) {
+alert('❌ El logo no debe superar los 2MB');
+input.value = '';
+return;
+}
+currentLogoFile = file;
+const reader = new FileReader();
+reader.onload = function(e) {
+currentLogoUrl = e.target.result;
+const container = document.getElementById('logoPreviewContainer');
+container.innerHTML = `<img src="${currentLogoUrl}" class="logo-preview" alt="Logo preview">`;
+document.getElementById('logoUploadContainer').classList.add('has-logo');
+document.getElementById('btnRemoveLogo').classList.remove('d-none');
+};
+reader.readAsDataURL(file);
+}
+};
+window.removeLogo = function(e) {
+e.stopPropagation();
+currentLogoFile = null;
+currentLogoUrl = null;
+document.getElementById('negocioLogo').value = '';
+document.getElementById('logoPreviewContainer').innerHTML = `
+<div class="logo-placeholder">
+<i class="fas fa-store"></i>
+</div>
+`;
+document.getElementById('logoUploadContainer').classList.remove('has-logo');
+document.getElementById('btnRemoveLogo').classList.add('d-none');
+};
+async function uploadLogo(file, negocioId) {
+if (!file) return null;
+try {
+const storageRef = firebase.storage().ref();
+const logoRef = storageRef.child(`logos_negocios/${negocioId}/logo.png`);
+await logoRef.put(file);
+const downloadURL = await logoRef.getDownloadURL();
+return downloadURL;
+} catch (err) {
+console.error('Error subiendo logo:', err);
+showToast('️ Error al subir logo: ' + err.message, 'warning');
+return null;
+}
+}
+// ==================== BUSCADOR ====================
+function clearSearch() {
+document.getElementById('searchInput').value = '';
+filteredNegocios = [...negociosList];
+renderNegocios(filteredNegocios);
+updateSearchStats();
+}
+function updateSearchStats() {
+const statsDiv = document.getElementById('searchStats');
+const total = negociosList.length;
+const showing = filteredNegocios.length;
+const searchTerm = document.getElementById('searchInput').value;
+if (searchTerm) {
+statsDiv.innerHTML = `Mostrando <strong>${showing}</strong> de <strong>${total}</strong> negocios`;
+} else {
+statsDiv.innerHTML = `<strong>${total}</strong> negocio${total !== 1 ? 's' : ''} registrado${total !== 1 ? 's' : ''}`;
+}
+}
+// ==================== TIPOS DE NEGOCIO ====================
+async function cargarTiposNegocios() {
+try {
+const snap = await db.ref('config_tipos_negocios').once('value');
+const personalizados = {};
+snap.forEach(child => { personalizados[child.key] = child.val(); });
+const tiposBase = getTiposNegocioDisponibles().reduce((acc, tipo) => {
+acc[tipo.id] = { icono: tipo.icono, nombre: tipo.nombre, color: tipo.color, esBase: true };
+return acc;
+}, {});
+tiposNegocios = { ...tiposBase, ...personalizados };
+actualizarSelectTipos();
+if (!document.getElementById('view-tipos').classList.contains('d-none')) cargarVistaTipos();
+} catch (err) {
+console.error('Error cargando tipos:', err);
+const tiposBase = getTiposNegocioDisponibles().reduce((acc, tipo) => {
+acc[tipo.id] = { icono: tipo.icono, nombre: tipo.nombre, color: tipo.color, esBase: true };
+return acc;
+}, {});
+tiposNegocios = tiposBase;
+actualizarSelectTipos();
+}
+}
+function actualizarSelectTipos() {
+const select = document.getElementById('negocioTipo');
+select.innerHTML = '<option value="">Seleccione un tipo...</option>';
+Object.entries(tiposNegocios).sort((a, b) => a[1].nombre.localeCompare(b[1].nombre)).forEach(([key, config]) => {
+const option = document.createElement('option');
+option.value = key;
+option.textContent = `${config.icono || '🆕'} ${config.nombre}`;
+option.dataset.color = config.colores?.primary || config.color || '#3498db';
+option.dataset.icono = config.icono || '🆕';
+select.appendChild(option);
+});
+}
+async function cargarVistaTipos() {
+const container = document.getElementById('tiposGrid');
+container.innerHTML = '';
+Object.entries(tiposNegocios).sort((a, b) => a[1].nombre.localeCompare(b[1].nombre)).forEach(([key, config]) => {
+const configCompleta = getConfigByTipo(key);
+const modulosActivos = configCompleta.modulos ? Object.values(configCompleta.modulos).filter(v => v).length : 0;
+const col = document.createElement('div');
+col.className = 'col-md-4';
+col.innerHTML = `
+<div class="card tipo-badge" onclick="editarTipo('${key}')" style="cursor: pointer;">
+<div class="card-body">
+<div class="d-flex justify-content-between align-items-center mb-2">
+<h5 class="card-title mb-0">${config.icono || '🆕'} ${config.nombre}</h5>
+${config.esBase ? '<span class="badge bg-secondary">Base</span>' : '<span class="badge bg-success">Personalizado</span>'}
+</div>
+<p class="card-text small text-muted mb-2"><strong>ID:</strong> ${key}<br><strong>Módulos:</strong> ${modulosActivos} activos</p>
+<div class="d-flex gap-2 align-items-center">
+<span class="color-preview" style="background: ${config.colores?.primary || config.color || '#3498db'}"></span>
+<span class="color-preview" style="background: ${config.colores?.secondary || '#2980b9'}"></span>
+</div>
+</div>
+</div>
+`;
+container.appendChild(col);
+});
+if (Object.keys(tiposNegocios).length === 0) container.innerHTML = '<div class="alert alert-info">No hay tipos registrados.</div>';
+}
+window.editarTipo = function(key) {
+const config = getConfigByTipo(key);
+const tipoInfo = tiposNegocios[key];
+if (!config) return;
+document.getElementById('editTipoKey').value = key;
+document.getElementById('tipoId').value = key;
+document.getElementById('tipoId').disabled = true;
+document.getElementById('tipoNombre').value = config.nombre || '';
+document.getElementById('tipoIcono').value = config.icono || '🆕';
+document.getElementById('tipoColor1').value = config.colores?.primary || tipoInfo.color || '#3498db';
+document.getElementById('tipoColor2').value = config.colores?.secondary || '#2980b9';
+document.querySelectorAll('.modulo-check').forEach(cb => { cb.checked = config.modulos?.[cb.value] === true; });
+document.getElementById('camposProducto').value = (config.campos_producto || []).join(',');
+document.getElementById('camposPedido').value = (config.campos_pedido || []).join(',');
+document.getElementById('btnDeleteTipo').style.display = tipoInfo.esBase ? 'none' : 'inline-block';
+newTipoModal.show();
+};
+window.limpiarFormTipo = function() {
+document.getElementById('formNuevoTipo').reset();
+document.getElementById('editTipoKey').value = '';
+document.getElementById('tipoId').disabled = false;
+document.getElementById('tipoId').value = '';
+document.getElementById('tipoIcono').value = '🆕';
+document.getElementById('tipoColor1').value = '#4ECDC4';
+document.getElementById('tipoColor2').value = '#44A3AA';
+document.getElementById('btnDeleteTipo').style.display = 'none';
+document.querySelectorAll('.modulo-check').forEach(cb => {
+const modulosBase = ['dashboard', 'productos', 'categorias', 'clientes', 'empleados', 'reportes', 'config'];
+cb.checked = modulosBase.includes(cb.value);
+cb.disabled = ['dashboard', 'config'].includes(cb.value);
+});
+};
+async function handleNuevoTipo(e) {
+e.preventDefault();
+const key = document.getElementById('tipoId').value.trim().toLowerCase();
+const editKey = document.getElementById('editTipoKey').value;
+if (!key || !/^[a-z_]+$/.test(key)) { alert('❌ El ID debe contener solo letras minúsculas y guiones bajos'); return; }
+if (editKey && key !== editKey && tiposNegocios[key]) { alert('❌ Ya existe un tipo con ese ID'); return; }
+const modulos = {};
+document.querySelectorAll('.modulo-check').forEach(cb => { modulos[cb.value] = cb.checked; });
+const config = {
+icono: document.getElementById('tipoIcono').value || '🆕',
+nombre: document.getElementById('tipoNombre').value,
+modulos: modulos,
+campos_producto: document.getElementById('camposProducto').value.split(',').map(c => c.trim()).filter(c => c),
+campos_pedido: document.getElementById('camposPedido').value.split(',').map(c => c.trim()).filter(c => c),
+dashboard_stats: ['ventas_hoy', 'pedidos_hoy', 'pendientes', 'clientes'],
+colores: { primary: document.getElementById('tipoColor1').value, secondary: document.getElementById('tipoColor2').value }
+};
+try {
+await db.ref(`config_tipos_negocios/${key}`).set(config);
+tiposNegocios[key] = { ...config, esBase: false };
+actualizarSelectTipos();
+cargarVistaTipos();
+alert(`✅ Tipo "${config.nombre}" ${editKey ? 'actualizado' : 'creado'} exitosamente`);
+newTipoModal.hide();
+if (!editKey) limpiarFormTipo();
+} catch (err) { alert('❌ Error: ' + err.message); }
+}
+window.eliminarTipo = async function() {
+const key = document.getElementById('editTipoKey').value;
+if (!key || tiposNegocios[key]?.esBase) { alert('❌ No se pueden eliminar tipos base del sistema'); return; }
+if (!confirm(`¿Eliminar permanentemente el tipo "${tiposNegocios[key]?.nombre}"?`)) return;
+try {
+await db.ref(`config_tipos_negocios/${key}`).remove();
+delete tiposNegocios[key];
+actualizarSelectTipos();
+cargarVistaTipos();
+newTipoModal.hide();
+alert('✅ Tipo eliminado');
+} catch (err) { alert('❌ Error: ' + err.message); }
+};
+// ==================== CREAR NEGOCIO ====================
+async function handleNuevoNegocio(e) {
+e.preventDefault();
+const btn = e.target.querySelector('button[type="submit"]');
+const originalText = btn.textContent;
+btn.disabled = true; btn.textContent = 'Creando...';
+try {
+const nombreNegocio = document.getElementById('negocioNombre').value.trim();
+const negocioSlug = nombreASlug(nombreNegocio);
+const negocioData = {
+nombre: nombreNegocio,
+slug: negocioSlug,
+tipo: document.getElementById('negocioTipo').value,
+direccion: document.getElementById('negocioDireccion').value.trim(),
+telefono: document.getElementById('negocioTelefono').value.trim(),
+whatsapp: document.getElementById('negocioWhatsApp').value.trim(),
+tema: document.getElementById('negocioTema').value,
+activo: true,
+creadoEn: Date.now(),
+plan: 'trial',
+trialEnds: Date.now() + (14 * 24 * 60 * 60 * 1000)
+};
+const ownerEmail = document.getElementById('ownerEmail').value.trim();
+const ownerPassword = document.getElementById('ownerPassword').value;
+const ownerName = document.getElementById('ownerName').value.trim();
+const negocioRef = db.ref('negocios').push(negocioData);
+const negocioId = negocioRef.key;
+if (currentLogoFile) {
+showToast('📤 Subiendo logo...', 'info');
+const logoUrl = await uploadLogo(currentLogoFile, negocioId);
+if (logoUrl) {
+await negocioRef.update({ logo: logoUrl });
+negocioData.logo = logoUrl;
+}
+}
+const userCredential = await auth.createUserWithEmailAndPassword(ownerEmail, ownerPassword);
+const uid = userCredential.user.uid;
+await db.ref(`usuarios/${uid}`).set({
+email: ownerEmail,
+nombre: ownerName,
+rol: 'owner',
+negocioId: negocioId,
+activo: true,
+creadoEn: Date.now(),
+passwordTemporal: ownerPassword,
+isAdmin: true
+});
+await db.ref(`negocios/${negocioId}/clientes/${uid}`).set({
+uid,
+email: ownerEmail,
+nombre: ownerName,
+rol: 'owner',
+isAdmin: true,
+permisos: ['all'],
+activo: true,
+creadoEn: Date.now(),
+telefono: '',
+fechaUltimoAcceso: Date.now()
+});
+await db.ref(`negocios/${negocioId}/usuarios/${uid}`).set({
+uid,
+email: ownerEmail,
+nombre: ownerName,
+rol: 'owner',
+isAdmin: true,
+permisos: ['all'],
+activo: true,
+creadoEn: Date.now()
+});
+const panelUrl = `${window.location.origin}/panel.html?negocio=${negocioSlug}`;
+const appUrl = `${window.location.origin}/app.html?negocio=${negocioSlug}`;
+const credenciales = `Negocio: ${nombreNegocio}
+Email: ${ownerEmail}
+Contraseña: ${ownerPassword}
+Panel: ${panelUrl}
+App: ${appUrl}`;
+await navigator.clipboard.writeText(credenciales);
+showToast('✅ Negocio creado. Credenciales copiadas', 'success');
+bootstrap.Modal.getInstance(document.getElementById('newNegocioModal')).hide();
+e.target.reset();
+removeLogo({ stopPropagation: () => {} });
+} catch (err) {
+console.error('Error al crear negocio:', err);
+alert('❌ Error: ' + err.message);
+} finally {
+btn.disabled = false;
+btn.textContent = originalText;
+}
+}
+// ==================== CARGAR NEGOCIOS ====================
+function loadNegocios() {
+const container = document.getElementById('negociosList');
+const user = auth.currentUser;
+if (!user) {
+container.innerHTML = `
+<div class="alert alert-warning text-center">
+<i class="fas fa-exclamation-triangle me-2"></i>
+Debes iniciar sesión para ver los negocios
+</div>`;
+return;
+}
+console.log('🔄 Cargando negocios...');
+container.innerHTML = `
+<div class="text-center py-5">
+<div class="spinner-border text-primary" role="status"></div>
+<p class="mt-2 text-muted">Cargando negocios...</p>
+</div>`;
+db.ref('negocios').on('value', snap => {
+console.log('✅ Negocios cargados:', snap.numChildren());
+negociosList = [];
+if (!snap.exists()) {
+container.innerHTML = `
+<div class="empty-state">
+<i class="fas fa-inbox"></i>
+<h5>No hay negocios registrados</h5>
+<p>¡Crea tu primer negocio usando el botón "Nuevo Negocio"!</p>
+</div>`;
+updateSearchStats();
+return;
+}
+snap.forEach(child => {
+const data = child.val();
+const negocioId = child.key;
+if (!data) return;
+const nombreNegocio = data.nombre || `Negocio Sin Nombre (${negocioId.substr(0, 6)})`;
+const tipoConfig = typeof getConfigByTipo === 'function' ? getConfigByTipo(data.tipo) : null;
+let ownerEmail = 'No disponible';
+let ownerUid = null;
+if (data.usuarios) {
+Object.entries(data.usuarios).forEach(([uid, userData]) => {
+if (userData && userData.rol === 'owner') {
+ownerEmail = userData.email || 'No disponible';
+ownerUid = uid;
+}
+});
+}
+negociosList.push({
+id: negocioId,
+nombre: nombreNegocio,
+slug: data.slug || nombreASlug(nombreNegocio),
+tipo: data.tipo || 'desconocido',
+tipoNombre: tipoConfig?.nombre || data.tipo || 'Sin categoría',
+tipoIcono: tipoConfig?.icono || '',
+direccion: data.direccion || '',
+telefono: data.telefono || '',
+ownerEmail: ownerEmail,
+ownerUid: ownerUid,
+activo: data.activo !== false,
+creadoEn: data.creadoEn || Date.now(),
+logo: data.logo || null,
+membresia: data.membresia || null
+});
+});
+console.log(`📋 Total negocios procesados: ${negociosList.length}`);
+filteredNegocios = [...negociosList];
+renderNegocios(filteredNegocios);
+updateSearchStats();
+
+// ACTUALIZAR CONTADOR
+const totalElement = document.getElementById('totalNegocios');
+if (totalElement) {
+  totalElement.textContent = snap.numChildren();
+}
+
+}, error => {
+console.error('❌ Error al cargar negocios:', error);
+container.innerHTML = `
+<div class="alert alert-danger text-center">
+<i class="fas fa-exclamation-circle me-2"></i>
+<strong>Error al cargar los negocios</strong><br>
+<small>${error.message}</small><br>
+<button class="btn btn-primary mt-3" onclick="location.reload()">
+<i class="fas fa-sync-alt me-1"></i>Recargar
+</button>
+</div>`;
+});
+}
+function renderNegocios(negocios) {
+const container = document.getElementById('negociosList');
+if (negocios.length === 0) {
+container.innerHTML = `
+<div class="no-results">
+<i class="fas fa-search"></i>
+<h5>No se encontraron resultados</h5>
+<p>Intenta con otros términos de búsqueda</p>
+</div>
+`;
+return;
+}
+container.innerHTML = '';
+negocios.forEach(negocio => {
+const negocioSlug = negocio.slug || nombreASlug(negocio.nombre);
+const panelUrl = `${window.location.origin}/panel.html?negocio=${negocioSlug}`;
+const appUrl = `${window.location.origin}/app.html?negocio=${negocioSlug}`;
+const membresiaBadge = obtenerBadgeMembresia(negocio.membresia);
+const row = document.createElement('div');
+row.className = 'business-row';
+const logoHTML = negocio.logo
+? `<img src="${negocio.logo}" alt="${negocio.nombre}" onerror="this.parentElement.innerHTML='<i class=\\'fas fa-store\\'></i>'">`
+: `<i class="fas fa-store"></i>`;
+const negocioIdEscaped = negocio.id.replace(/'/g, "\\'");
+const ownerUidEscaped = (negocio.ownerUid || '').replace(/'/g, "\\'");
+const ownerEmailEscaped = (negocio.ownerEmail || '').replace(/'/g, "\\'");
+const logoUrlEscaped = (negocio.logo || '').replace(/'/g, "\\'");
+row.innerHTML = `
+<div class="business-info" style="flex: 1.5; min-width: 250px;">
+<div class="d-flex align-items-center gap-3">
+<div class="business-logo-box">
+${logoHTML}
+</div>
+<div>
+<div class="business-name">${negocio.nombre}</div>
+<div class="business-meta">
+<span><i class="fas fa-user-tie"></i>${negocio.ownerEmail}</span>
+${negocio.direccion ? `<span><i class="fas fa-map-marker-alt"></i>${negocio.direccion}</span>` : ''}
+</div>
+</div>
+</div>
+</div>
+<div style="flex: 0.8;">
+<div class="category-section">
+<span class="badge-tipo-compact">${negocio.tipoNombre}</span>
+<span class="status-indicator ${negocio.activo ? 'status-active' : 'status-inactive'}">
+<i class="fas fa-${negocio.activo ? 'check-circle' : 'pause-circle'}"></i>
+${negocio.activo ? 'Activo' : 'Inactivo'}
+</span>
+</div>
+</div>
+<div style="flex: 0.9;">
+${membresiaBadge}
+</div>
+<div style="flex: 0.7;">
+<button class="btn btn-sm btn-outline-info w-100" onclick="imprimirFacturaNegocio('${negocioIdEscaped}', '${negocio.nombre.replace(/'/g, "\\'")}')"
+title="Imprimir factura del negocio" style="font-size: 0.8rem; padding: 6px;">
+<i class="fas fa-print me-1"></i> Factura
+</button>
+</div>
+<div class="actions-section">
+<a href="${panelUrl}" target="_blank" class="btn btn-action-compact btn-panel">
+<i class="fas fa-tachometer-alt"></i>Panel
+</a>
+<a href="${appUrl}" target="_blank" class="btn btn-action-compact btn-app">
+<i class="fas fa-mobile-alt"></i>App
+</a>
+<button class="btn btn-action-compact btn-credenciales" onclick="verCredenciales('${negocioIdEscaped}', '${ownerUidEscaped}', '${ownerEmailEscaped}', '${logoUrlEscaped}')">
+<i class="fas fa-key"></i>Credenciales
+</button>
+</div>
+`;
+container.appendChild(row);
+});
+}
+function obtenerBadgeMembresia(membresia) {
+if (!membresia) {
+return `<span class="badge bg-secondary" style="font-size: 0.75rem;">Sin membresía</span>`;
+}
+const tipo = membresia.tipo || 'estandar';
+const estado = membresia.estado || 'al_dia';
+let badgeClass = 'bg-secondary';
+let badgeText = 'Estandar';
+if (tipo === 'premium') {
+badgeClass = 'bg-warning text-dark';
+badgeText = 'Premium';
+} else if (tipo === 'enterprise') {
+badgeClass = 'bg-danger';
+badgeText = 'Enterprise';
+}
+const estadoIcon = estado === 'al_dia' ? 'check-circle' : 'exclamation-circle';
+const estadoText = estado === 'al_dia' ? 'Al día' : 'Pendiente';
+const estadoColor = estado === 'al_dia' ? 'text-success' : 'text-danger';
+return `
+<div class="d-flex flex-column gap-1">
+<span class="badge ${badgeClass}" style="font-size: 0.75rem;">
+<i class="fas fa-crown me-1"></i>${badgeText}
+</span>
+<small class="${estadoColor}" style="font-size: 0.7rem;">
+<i class="fas fa-${estadoIcon} me-1"></i>${estadoText}
+</small>
+</div>
+`;
+}
+// ==================== IMPRIMIR FACTURA ====================
+
+
+// ==================== IMPRIMIR FACTURA ====================
+// ==================== IMPRIMIR FACTURA ====================
+window.imprimirFacturaNegocio = async function(negocioId, nombreNegocio) {
+  try {
+    const negocioSnap = await db.ref(`negocios/${negocioId}`).once('value');
+    const negocio = negocioSnap.val();
+    
+    if (!negocio) {
+      showToast('❌ Negocio no encontrado', 'error');
+      return;
+    }
+    
+    // Cargar datos de la empresa
+    let empresaData = {};
+    try {
+      const empresaSnap = await db.ref('config_empresa').once('value');
+      empresaData = empresaSnap.val() || {};
+    } catch (err) {
+      console.warn('No se pudieron cargar datos de empresa:', err);
+    }
+    
+    const membresia = negocio.membresia || { tipo: 'estandar', estado: 'al_dia' };
+    const ventanaImpresion = window.open('', '_blank', 'width=900,height=700');
+    
+    const fechaInstalacion = membresia.fechaInstalacion 
+      ? new Date(membresia.fechaInstalacion).toLocaleDateString('es-CO')
+      : 'No registrada';
+    
+    const fechaProximoPago = membresia.fechaProximoPago
+      ? new Date(membresia.fechaProximoPago).toLocaleDateString('es-CO')
+      : 'No definida';
+    
+    const htmlFactura = `
+      <!DOCTYPE html>
+      <html lang="es">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Factura - ${nombreNegocio}</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <style>
+          * { margin: 0; padding: 0; box-sizing: border-box; }
+          body { 
+            font-family: 'Segoe UI', Arial, sans-serif; 
+            padding: 15px;
+            max-width: 100%;
+            margin: 0 auto;
+            color: #1e293b;
+            background: #fff;
+          }
+          
+          /* HEADER COMPACTO */
+          .header {
+            text-align: center;
+            padding: 12px 10px;
+            border-bottom: 2px solid #667eea;
+            margin-bottom: 15px;
+          }
+          
+          .header .empresa-nombre {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 4px;
+          }
+          
+          .header .empresa-descripcion {
+            font-size: 0.85rem;
+            color: #64748b;
+            font-style: italic;
+            margin-bottom: 8px;
+          }
+          
+          .header .empresa-contacto {
+            font-size: 0.8rem;
+            color: #475569;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+          }
+          
+          .header .empresa-contacto span {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+          }
+          
+          .header .empresa-contacto i {
+            color: #667eea;
+          }
+          
+          .header .titulo-factura {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #e2e8f0;
+            white-space: nowrap;
+          }
+          
+          /* SECCIONES COMPACTAS */
+          .section {
+            margin-bottom: 15px;
+          }
+          
+          .section-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding-bottom: 5px;
+            border-bottom: 2px solid #667eea;
+          }
+          
+          .section-title i {
+            color: #667eea;
+            font-size: 1rem;
+          }
+          
+          /* GRID DE DATOS COMPACTO */
+          .data-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 10px;
+          }
+          
+          .data-item {
+            background: #f8fafc;
+            padding: 10px;
+            border-radius: 8px;
+            border-left: 3px solid #667eea;
+          }
+          
+          .data-item .label {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+          }
+          
+          .data-item .value {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #1e293b;
+            word-break: break-word;
+            line-height: 1.3;
+          }
+          
+          /* BADGES COMPACTOS */
+          .badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 15px;
+            font-weight: 600;
+            font-size: 0.75rem;
+          }
+          
+          .badge-premium {
+            background: #fef3c7;
+            color: #92400e;
+          }
+          
+          .badge-estandar {
+            background: #e0f2fe;
+            color: #0369a1;
+          }
+          
+          .badge-al-dia {
+            background: #dcfce7;
+            color: #166534;
+          }
+          
+          .badge-pendiente {
+            background: #fee2e2;
+            color: #991b1b;
+          }
+          
+          /* FOOTER COMPACTO */
+          .footer {
+            margin-top: 15px;
+            padding-top: 10px;
+            border-top: 2px solid #e2e8f0;
+            text-align: center;
+            color: #64748b;
+            font-size: 0.75rem;
+          }
+          
+          .footer strong {
+            color: #667eea;
+          }
+          
+          /* BOTÓN IMPRIMIR */
+          .btn-print {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            padding: 8px 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.85rem;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+          }
+          
+          .btn-print:hover {
+            transform: translateY(-2px);
+          }
+          
+          /* OPTIMIZACIÓN PARA IMPRESIÓN */
+          @media print {
+            @page {
+              size: auto;
+              margin: 10mm;
+            }
+            
+            .btn-print { display: none; }
+            body { padding: 0; }
+            
+            .header {
+              padding: 8px;
+              margin-bottom: 10px;
+            }
+            
+            .section {
+              margin-bottom: 10px;
+            }
+            
+            .data-grid {
+              gap: 8px;
+            }
+            
+            .data-item {
+              padding: 8px;
+            }
+          }
+          
+          @media (max-width: 600px) {
+            body { padding: 10px; }
+            .header .empresa-nombre { font-size: 1.2rem; }
+            .data-grid { grid-template-columns: 1fr; gap: 8px; }
+            .data-item { padding: 8px; }
+          }
+        </style>
+      </head>
+      <body>
+        <button class="btn-print" onclick="window.print()">
+          <i class="fas fa-print"></i> Imprimir
+        </button>
+        
+        <!-- HEADER COMPACTO -->
+        <div class="header">
+          <div class="empresa-nombre">${empresaData.nombre || 'Agencia Nexo'}</div>
+          ${empresaData.descripcion ? '<div class="empresa-descripcion">"' + empresaData.descripcion + '"</div>' : ''}
+          <div class="empresa-contacto">
+            ${empresaData.celular ? '<span><i class="fas fa-phone"></i> ' + empresaData.celular + '</span>' : ''}
+            ${empresaData.email ? '<span><i class="fas fa-envelope"></i> ' + empresaData.email + '</span>' : ''}
+          </div>
+          <div class="titulo-factura">🧾 Factura de Suscripción</div>
+        </div>
+        
+        <!-- DATOS DEL NEGOCIO (solo nombre, dirección y teléfono) -->
+        <div class="section">
+          <div class="section-title">
+            <i class="fas fa-store"></i>
+            Datos del Negocio
+          </div>
+          <div class="data-grid">
+            <div class="data-item">
+              <div class="label">Nombre</div>
+              <div class="value">${negocio.nombre || 'No especificado'}</div>
+            </div>
+            <div class="data-item">
+              <div class="label">Dirección</div>
+              <div class="value">${negocio.direccion || 'No registrada'}</div>
+            </div>
+            <div class="data-item">
+              <div class="label">Teléfono</div>
+              <div class="value">${negocio.telefono || 'No registrado'}</div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- MEMBRESÍA -->
+        <div class="section">
+          <div class="section-title" style="border-bottom-color: #f59e0b;">
+            <i class="fas fa-crown" style="color: #f59e0b;"></i>
+            Información de Membresía
+          </div>
+          <div class="data-grid">
+            <div class="data-item" style="border-left-color: #f59e0b;">
+              <div class="label">Tipo de Membresía</div>
+              <div class="value">
+                <span class="badge ${membresia.tipo === 'premium' ? 'badge-premium' : 'badge-estandar'}">
+                  ${membresia.tipo === 'premium' ? ' Premium' : '⭐ Estándar'}
+                </span>
+              </div>
+            </div>
+            <div class="data-item" style="border-left-color: #f59e0b;">
+              <div class="label">Estado de Pago</div>
+              <div class="value">
+                <span class="badge ${membresia.estado === 'al_dia' ? 'badge-al-dia' : 'badge-pendiente'}">
+                  ${membresia.estado === 'al_dia' ? '✅ Al día' : '⚠️ Pendiente'}
+                </span>
+              </div>
+            </div>
+            <div class="data-item" style="border-left-color: #f59e0b;">
+              <div class="label">Fecha de Instalación</div>
+              <div class="value">${fechaInstalacion}</div>
+            </div>
+            <div class="data-item" style="border-left-color: #f59e0b;">
+              <div class="label">Próximo Pago</div>
+              <div class="value">${fechaProximoPago}</div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- FOOTER COMPACTO -->
+        <div class="footer">
+          <p><strong>${empresaData.nombre || 'Agencia Nexo'}</strong> - Sistema de Gestión Multi-Negocio</p>
+          <p style="margin-top: 4px;">Documento generado el ${new Date().toLocaleString('es-CO')}</p>
+
+          <!-- MENSAJE DE DIOS -->
+          <div style="margin-top: 15px; padding: 12px; background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border-radius: 8px; border-left: 3px solid #667eea;">
+            <p style="margin: 0; font-size: 0.8rem; color: #475569; font-style: italic; text-align: center;">
+              <i class="fas fa-praying-hands" style="color: #667eea; margin-right: 5px;"></i>
+              "Encomienda al Señor tus obras, y tus proyectos tendrán éxito."
+              <br><strong style="color: #667eea; font-size: 0.75rem;">- Proverbios 16:3</strong>
+            </p>
+          </div>
+
+        </div>
+        
+        <script>
+          window.onload = function() {
+            setTimeout(function() { window.print(); }, 300);
+          };
+        <\/script>
+      </body>
+      </html>
+    `;
+    
+    ventanaImpresion.document.write(htmlFactura);
+    ventanaImpresion.document.close();
+    
+  } catch (error) {
+    console.error('Error al imprimir factura:', error);
+    showToast('❌ Error al generar factura: ' + error.message, 'error');
+  }
+};
+
+// ==================== CREDENCIALES ====================
+window.verCredenciales = async function(negocioId, ownerUid, ownerEmail, logoUrl) {
+currentNegocioId = negocioId;
+currentOwnerUid = ownerUid;
+if (!ownerUid || ownerUid === 'null') {
+alert('❌ No se encontró el usuario administrador para este negocio');
+return;
+}
+try {
+const userSnap = await db.ref(`usuarios/${ownerUid}`).once('value');
+const userData = userSnap.val();
+const password = userData?.passwordTemporal || 'No disponible (el usuario ya la cambió)';
+const negocioSnap = await db.ref(`negocios/${negocioId}`).once('value');
+const negocioData = negocioSnap.val();
+if (!negocioData) {
+throw new Error('Negocio no encontrado');
+}
+const nombreNegocio = negocioData.nombre || `Negocio ${negocioId.substr(0, 6)}`;
+const negocioSlug = negocioData.slug || nombreASlug(nombreNegocio);
+const panelUrl = `${window.location.origin}/panel.html?negocio=${negocioSlug}`;
+const appUrl = `${window.location.origin}/app.html?negocio=${negocioSlug}`;
+const posUrl = `${window.location.origin}/pos.html?negocio=${negocioSlug}`;
+const logoContainer = document.getElementById('credLogoContainer');
+if (logoUrl) {
+logoContainer.innerHTML = `<img src="${logoUrl}" alt="Logo" style="width: 100%; height: 100%; object-fit: cover; border-radius: 12px;">`;
+} else {
+logoContainer.innerHTML = `<i class="fas fa-store"></i>`;
+}
+document.getElementById('credEmail').value = ownerEmail || 'No disponible';
+document.getElementById('credPassword').value = password;
+document.getElementById('credPanelLink').value = panelUrl;
+document.getElementById('credAppLink').value = appUrl;
+document.getElementById('credPosLink').value = posUrl;
+document.getElementById('credDireccion').textContent = negocioData.direccion || 'Sin dirección';
+document.getElementById('credTelefono').textContent = negocioData.telefono || 'Sin teléfono';
+document.getElementById('credWhatsApp').textContent = negocioData.whatsapp || 'Sin WhatsApp';
+document.getElementById('credFechaCreacion').textContent = new Date(negocioData.creadoEn || Date.now()).toLocaleDateString('es-CO');
+const tipoConfig = tiposNegocios[negocioData.tipo];
+document.getElementById('credTipoNegocio').textContent = tipoConfig ? tipoConfig.nombre : (negocioData.tipo || 'No especificado');
+const membresia = negocioData.membresia || {};
+document.getElementById('credFechaInstalacion').textContent = membresia.fechaInstalacion
+? new Date(membresia.fechaInstalacion).toLocaleDateString('es-CO')
+: 'No registrada';
+document.getElementById('credProximoPago').textContent = membresia.fechaProximoPago
+? new Date(membresia.fechaProximoPago).toLocaleDateString('es-CO')
+: 'No definida';
+const tipoBadge = document.getElementById('credTipoMembresia');
+if (membresia.tipo === 'premium') {
+tipoBadge.className = 'badge bg-warning text-dark px-3 py-2 rounded-pill';
+tipoBadge.textContent = 'Premium';
+} else if (membresia.tipo === 'enterprise') {
+tipoBadge.className = 'badge bg-danger px-3 py-2 rounded-pill';
+tipoBadge.textContent = 'Enterprise';
+} else {
+tipoBadge.className = 'badge bg-info text-dark px-3 py-2 rounded-pill';
+tipoBadge.textContent = 'Estándar';
+}
+const estadoEl = document.getElementById('credEstadoPago');
+if (membresia.estado === 'al_dia') {
+estadoEl.innerHTML = '<span class="badge bg-success">✅ Al día</span>';
+} else if (membresia.estado === 'pendiente') {
+estadoEl.innerHTML = '<span class="badge bg-warning text-dark">⚠️ Pendiente</span>';
+} else if (membresia.estado === 'vencido') {
+estadoEl.innerHTML = '<span class="badge bg-danger"> Vencido</span>';
+} else {
+estadoEl.innerHTML = '<span class="badge bg-secondary">Sin definir</span>';
+}
+document.getElementById('credUltimaActualizacion').textContent = membresia.actualizadoEn
+? new Date(membresia.actualizadoEn).toLocaleString('es-CO')
+: 'Nunca';
+document.getElementById('negocioView').classList.remove('d-none');
+document.getElementById('negocioEdit').classList.add('d-none');
+document.getElementById('btnEditarNegocio').classList.remove('d-none');
+document.getElementById('membresiaView').classList.remove('d-none');
+document.getElementById('membresiaEdit').classList.add('d-none');
+document.getElementById('btnEditarMembresia').classList.remove('d-none');
+document.getElementById('credencialesView').classList.remove('d-none');
+document.getElementById('credencialesEdit').classList.add('d-none');
+document.getElementById('btnEditarCred').classList.remove('d-none');
+credencialesModal.show();
+} catch (err) {
+console.error('Error al cargar credenciales:', err);
+alert('Error al cargar credenciales: ' + err.message);
+}
+};
+// ==================== EDITAR DATOS NEGOCIO ====================
+window.editarDatosNegocio = function() {
+document.getElementById('negocioView').classList.add('d-none');
+document.getElementById('negocioEdit').classList.remove('d-none');
+document.getElementById('btnEditarNegocio').classList.add('d-none');
+document.getElementById('editDireccion').value = document.getElementById('credDireccion').textContent;
+document.getElementById('editTelefono').value = document.getElementById('credTelefono').textContent;
+document.getElementById('editWhatsApp').value = document.getElementById('credWhatsApp').textContent;
+const selectTipo = document.getElementById('editTipoNegocio');
+selectTipo.innerHTML = '<option value="">Seleccione...</option>';
+Object.entries(tiposNegocios).sort((a, b) => a[1].nombre.localeCompare(b[1].nombre)).forEach(([key, config]) => {
+const option = document.createElement('option');
+option.value = key;
+option.textContent = `${config.icono || '🆕'} ${config.nombre}`;
+option.selected = (key === document.getElementById('credTipoNegocio').textContent);
+selectTipo.appendChild(option);
+});
+};
+window.cancelarEdicionNegocio = function() {
+document.getElementById('negocioView').classList.remove('d-none');
+document.getElementById('negocioEdit').classList.add('d-none');
+document.getElementById('btnEditarNegocio').classList.remove('d-none');
+};
+window.guardarDatosNegocio = async function() {
+if (!currentNegocioId) {
+showToast('❌ No hay negocio seleccionado', 'error');
+return;
+}
+const direccion = document.getElementById('editDireccion').value.trim();
+const telefono = document.getElementById('editTelefono').value.trim();
+const whatsapp = document.getElementById('editWhatsApp').value.trim();
+const tipo = document.getElementById('editTipoNegocio').value;
+if (!tipo) {
+showToast('❌ Seleccione un tipo de negocio', 'error');
+return;
+}
+try {
+showToast('💾 Guardando cambios...', 'info');
+await db.ref(`negocios/${currentNegocioId}`).update({
+direccion: direccion,
+telefono: telefono,
+whatsapp: whatsapp,
+tipo: tipo
+});
+document.getElementById('credDireccion').textContent = direccion || '-';
+document.getElementById('credTelefono').textContent = telefono || '-';
+document.getElementById('credWhatsApp').textContent = whatsapp || '-';
+const tipoConfig = tiposNegocios[tipo];
+document.getElementById('credTipoNegocio').textContent = tipoConfig ? tipoConfig.nombre : tipo;
+loadNegocios();
+cancelarEdicionNegocio();
+showToast('✅ Datos del negocio actualizados', 'success');
+} catch (err) {
+console.error('Error:', err);
+showToast('❌ Error al guardar: ' + err.message, 'error');
+}
+};
+// ==================== CAMBIAR LOGO ====================
+window.cambiarLogoNegocio = async function(input) {
+if (!input.files || !input.files[0]) return;
+const file = input.files[0];
+if (file.size > 2 * 1024 * 1024) {
+alert('❌ El logo no debe superar los 2MB');
+input.value = '';
+return;
+}
+if (!currentNegocioId) {
+showToast('❌ No hay negocio seleccionado', 'error');
+return;
+}
+try {
+showToast('📤 Subiendo logo...', 'info');
+const storageRef = firebase.storage().ref();
+const logoRef = storageRef.child(`logos_negocios/${currentNegocioId}/logo.png`);
+await logoRef.put(file);
+const downloadURL = await logoRef.getDownloadURL();
+await db.ref(`negocios/${currentNegocioId}/logo`).set(downloadURL);
+const logoContainer = document.getElementById('credLogoContainer');
+logoContainer.innerHTML = `<img src="${downloadURL}" alt="Logo" style="width: 100%; height: 100%; object-fit: cover; border-radius: 12px;">`;
+loadNegocios();
+showToast('✅ Logo actualizado correctamente', 'success');
+} catch (err) {
+console.error('Error subiendo logo:', err);
+showToast('❌ Error al subir logo: ' + err.message, 'error');
+}
+input.value = '';
+};
+// ==================== EDITAR CREDENCIALES ====================
+window.editarCredenciales = function() {
+document.getElementById('credencialesView').classList.add('d-none');
+document.getElementById('credencialesEdit').classList.remove('d-none');
+document.getElementById('btnEditarCred').classList.add('d-none');
+document.getElementById('editEmail').value = document.getElementById('credEmail').value;
+document.getElementById('editPassword').value = document.getElementById('credPassword').value;
+showToast('✏️ Modifica las credenciales y guarda', 'info');
+};
+window.cancelarEdicionCredenciales = function() {
+document.getElementById('credencialesView').classList.remove('d-none');
+document.getElementById('credencialesEdit').classList.add('d-none');
+document.getElementById('btnEditarCred').classList.remove('d-none');
+};
+window.guardarCredenciales = async function() {
+if (!currentOwnerUid) {
+showToast('❌ No hay usuario seleccionado', 'error');
+return;
+}
+const newEmail = document.getElementById('editEmail').value.trim();
+const newPassword = document.getElementById('editPassword').value;
+if (!newEmail || !newEmail.includes('@')) {
+showToast('❌ Ingresa un email válido', 'error');
+return;
+}
+if (!newPassword || newPassword.length < 6) {
+showToast('❌ La contraseña debe tener mínimo 6 caracteres', 'error');
+return;
+}
+if (!confirm(`¿Actualizar credenciales? Se enviará un email a ${newEmail} para que el usuario establezca la nueva contraseña.`)) return;
+try {
+showToast('🔄 Actualizando credenciales...', 'info');
+await db.ref(`usuarios/${currentOwnerUid}`).update({
+email: newEmail,
+passwordTemporal: newPassword,
+actualizadoEn: Date.now()
+});
+if (currentNegocioId) {
+await db.ref(`negocios/${currentNegocioId}/usuarios/${currentOwnerUid}`).update({ email: newEmail });
+await db.ref(`negocios/${currentNegocioId}/clientes/${currentOwnerUid}`).update({ email: newEmail });
+}
+await auth.sendPasswordResetEmail(newEmail);
+document.getElementById('credEmail').value = newEmail;
+document.getElementById('credPassword').value = newPassword;
+cancelarEdicionCredenciales();
+loadNegocios();
+showToast('✅ Credenciales actualizadas. Se envió un email al usuario para establecer la nueva contraseña', 'success');
+} catch (err) {
+console.error('Error:', err);
+if (err.code === 'auth/user-not-found') {
+showToast('❌ Usuario no encontrado en Firebase Auth', 'error');
+} else if (err.code === 'auth/invalid-email') {
+showToast('❌ Email inválido', 'error');
+} else {
+showToast('❌ Error: ' + err.message, 'error');
+}
+}
+};
+window.generarAleatoriaEdit = function() {
+const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*';
+let newPassword = '';
+for (let i = 0; i < 12; i++) {
+newPassword += chars.charAt(Math.floor(Math.random() * chars.length));
+}
+document.getElementById('editPassword').value = newPassword;
+showToast('🔑 Contraseña aleatoria generada', 'success');
+};
+// ==================== COPIAR ====================
+window.copiarEmail = function() {
+const email = document.getElementById('credEmail').value;
+if (email && !email.includes('No disponible')) {
+navigator.clipboard.writeText(email);
+showToast('✅ Email copiado al portapapeles', 'success');
+}
+};
+window.copiarContraseña = function() {
+const password = document.getElementById('credPassword').value;
+if (password && !password.includes('No disponible')) {
+navigator.clipboard.writeText(password);
+showToast('✅ Contraseña copiada al portapapeles');
+}
+};
+window.copiarLink = function(tipo) {
+const linkId = tipo === 'panel' ? 'credPanelLink' :
+tipo === 'pos' ? 'credPosLink' : 'credAppLink';
+const link = document.getElementById(linkId).value;
+navigator.clipboard.writeText(link);
+showToast(` Link del ${tipo === 'panel' ? 'panel' : tipo === 'pos' ? 'POS' : 'app'} copiado`);
+};
+// ==================== ENVIAR WHATSAPP ====================
+window.enviarCredencialesWhatsApp = function() {
+try {
+const email = document.getElementById('credEmail').value;
+const password = document.getElementById('credPassword').value;
+const panelLink = document.getElementById('credPanelLink').value;
+const appLink = document.getElementById('credAppLink').value;
+const posLink = document.getElementById('credPosLink').value;
+const whatsappNegocio = document.getElementById('credWhatsApp')?.textContent || '';
+if (!email || !password) {
+showToast('❌ No hay credenciales disponibles', 'error');
+return;
+}
+const mensaje =
+`🎊✨ *¡FELICITACIONES!* 🎉✨
+━━━━━━━━━━━━━━━━━━━━━
+🏪 *¡TU NEGOCIO ESTÁ LISTO!* 🏪
+👋 ¡Hola! Bienvenido a nuestra plataforma.
+━━━━━━━━━━━━━━━━━━━━━
+🔐 *TUS CREDENCIALES:*
+📧 *Email:*
+${email}
+🔑 *Contraseña:*
+${password}
+━━━━━━━━━━━━━━━━━━━━━
+🖥️ *PANEL DE ADMINISTRACIÓN:*
+${panelLink}
+📱 *APP DEL CLIENTE:*
+${appLink}
+💰 *PUNTO DE VENTA (POS):*
+${posLink}
+━━━━━━━━━━━━━━━━━━━━━
+✨ ¿Necesitas ayuda? Contáctanos.
+🌟 *¡Mucho éxito!* 🌟
+━━━━━━━━━━━━━━━━━━━━━`;
+const mensajeCodificado = encodeURIComponent(mensaje);
+let whatsappNumero = '';
+if (whatsappNegocio && whatsappNegocio !== '-' && whatsappNegocio !== 'Sin WhatsApp') {
+whatsappNumero = whatsappNegocio.replace(/\D/g, '');
+}
+if (!whatsappNumero) {
+whatsappNumero = prompt(' Ingresa el número de WhatsApp (con código de país):\nEj: 573001234567');
+if (!whatsappNumero) return;
+}
+const whatsappURL = `https://wa.me/${whatsappNumero}?text=${mensajeCodificado}`;
+window.open(whatsappURL, '_blank');
+showToast('✅ WhatsApp abierto', 'success');
+} catch (error) {
+console.error('Error:', error);
+showToast('❌ Error: ' + error.message, 'error');
+}
+};
+// ==================== MEMBRESÍA ====================
+window.editarMembresia = function() {
+document.getElementById('membresiaView').classList.add('d-none');
+document.getElementById('membresiaEdit').classList.remove('d-none');
+document.getElementById('btnEditarMembresia').classList.add('d-none');
+const fechaInst = document.getElementById('credFechaInstalacion').textContent;
+const proxPago = document.getElementById('credProximoPago').textContent;
+if (fechaInst && fechaInst !== '-') {
+const fecha = new Date(fechaInst.split('/').reverse().join('-'));
+document.getElementById('editFechaInstalacion').value = fecha.toISOString().split('T')[0];
+}
+if (proxPago && proxPago !== '-') {
+const fecha = new Date(proxPago.split('/').reverse().join('-'));
+document.getElementById('editProximoPago').value = fecha.toISOString().split('T')[0];
+}
+const tipoActual = document.getElementById('credTipoMembresia').textContent.toLowerCase();
+if (tipoActual.includes('premium')) {
+document.getElementById('editTipoMembresia').value = 'premium';
+} else if (tipoActual.includes('enterprise')) {
+document.getElementById('editTipoMembresia').value = 'enterprise';
+} else {
+document.getElementById('editTipoMembresia').value = 'estandar';
+}
+const estadoActual = document.getElementById('credEstadoPago').textContent;
+if (estadoActual.includes('Al día')) {
+document.getElementById('editEstadoPago').value = 'al_dia';
+} else if (estadoActual.includes('Pendiente')) {
+document.getElementById('editEstadoPago').value = 'pendiente';
+} else {
+document.getElementById('editEstadoPago').value = 'vencido';
+}
+};
+window.cancelarEdicionMembresia = function() {
+document.getElementById('membresiaView').classList.remove('d-none');
+document.getElementById('membresiaEdit').classList.add('d-none');
+document.getElementById('btnEditarMembresia').classList.remove('d-none');
+};
+window.guardarMembresia = async function() {
+if (!currentNegocioId) {
+showToast('❌ No hay negocio seleccionado', 'error');
+return;
+}
+try {
+const fechaInstalacion = document.getElementById('editFechaInstalacion').value;
+const tipoMembresia = document.getElementById('editTipoMembresia').value;
+const estadoPago = document.getElementById('editEstadoPago').value;
+const proximoPago = document.getElementById('editProximoPago').value;
+const membresiaData = {
+tipo: tipoMembresia,
+estado: estadoPago,
+fechaInstalacion: fechaInstalacion ? new Date(fechaInstalacion).getTime() : null,
+fechaProximoPago: proximoPago ? new Date(proximoPago).getTime() : null,
+actualizadoEn: Date.now()
+};
+await db.ref(`negocios/${currentNegocioId}/membresia`).set(membresiaData);
+document.getElementById('credFechaInstalacion').textContent = fechaInstalacion
+? new Date(fechaInstalacion).toLocaleDateString('es-CO')
+: '-';
+document.getElementById('credProximoPago').textContent = proximoPago
+? new Date(proximoPago).toLocaleDateString('es-CO')
+: '-';
+const tipoBadge = document.getElementById('credTipoMembresia');
+if (tipoMembresia === 'premium') {
+tipoBadge.className = 'badge bg-warning text-dark px-3 py-2 rounded-pill';
+tipoBadge.textContent = 'Premium';
+} else if (tipoMembresia === 'enterprise') {
+tipoBadge.className = 'badge bg-danger px-3 py-2 rounded-pill';
+tipoBadge.textContent = 'Enterprise';
+} else {
+tipoBadge.className = 'badge bg-info text-dark px-3 py-2 rounded-pill';
+tipoBadge.textContent = 'Estándar';
+}
+const estadoEl = document.getElementById('credEstadoPago');
+if (estadoPago === 'al_dia') {
+estadoEl.innerHTML = '<span class="badge bg-success">✅ Al día</span>';
+} else if (estadoPago === 'pendiente') {
+estadoEl.innerHTML = '<span class="badge bg-warning text-dark">️ Pendiente</span>';
+} else {
+estadoEl.innerHTML = '<span class="badge bg-danger">❌ Vencido</span>';
+}
+document.getElementById('credUltimaActualizacion').textContent = new Date().toLocaleString('es-CO');
+cancelarEdicionMembresia();
+showToast('✅ Membresía actualizada correctamente', 'success');
+loadNegocios();
+} catch (err) {
+console.error('Error:', err);
+showToast('❌ Error al guardar: ' + err.message, 'error');
+}
+};
+// ==================== GENERAR CONTRASEÑA ====================
+window.generarNuevaContraseña = async function() {
+if (!currentOwnerUid) {
+showToast('❌ No hay usuario seleccionado', 'danger');
+return;
+}
+if (!confirm('¿Generar contraseña aleatoria y actualizar en Firebase?')) return;
+try {
+const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*';
+let newPassword = '';
+for (let i = 0; i < 12; i++) {
+newPassword += chars.charAt(Math.floor(Math.random() * chars.length));
+}
+showToast('🔄 Generando y actualizando contraseña...', 'info');
+const userEmail = document.getElementById('credEmail').value;
+const userSnap = await db.ref(`usuarios/${currentOwnerUid}`).once('value');
+const userData = userSnap.val();
+const currentPassword = userData?.passwordTemporal;
+if (!userEmail || userEmail === 'No disponible') {
+throw new Error('Email no disponible');
+}
+if (!currentPassword || currentPassword.includes('No disponible')) {
+throw new Error('No se puede generar: necesitas la contraseña actual guardada en BD');
+}
+await auth.signOut();
+await new Promise(resolve => setTimeout(resolve, 1000));
+const tempCredential = await auth.signInWithEmailAndPassword(userEmail, currentPassword);
+const tempUser = tempCredential.user;
+await tempUser.updatePassword(newPassword);
+await auth.signOut();
+await new Promise(resolve => setTimeout(resolve, 1000));
+await db.ref(`usuarios/${currentOwnerUid}/passwordTemporal`).set(newPassword);
+await db.ref(`usuarios/${currentOwnerUid}/passwordActualizadaEn`).set(Date.now());
+const superAdminEmail = document.getElementById('authEmail').value;
+const superAdminPassword = document.getElementById('authPassword').value;
+if (superAdminEmail && superAdminPassword) {
+await auth.signInWithEmailAndPassword(superAdminEmail, superAdminPassword);
+}
+document.getElementById('credPassword').value = newPassword;
+navigator.clipboard.writeText(newPassword);
+showToast('✅ Contraseña generada y actualizada en Firebase', 'success');
+} catch (err) {
+console.error('❌ Error:', err);
+showToast('❌ Error: ' + err.message, 'danger');
+const superAdminEmail = document.getElementById('authEmail').value;
+const superAdminPassword = document.getElementById('authPassword').value;
+if (superAdminEmail && superAdminPassword) {
+try {
+await auth.signInWithEmailAndPassword(superAdminEmail, superAdminPassword);
+} catch (loginErr) {
+console.error('Error al restaurar sesión:', loginErr);
+}
+}
+}
+};
+// ==================== GESTIÓN DE EMPRESA MULTI-ADMIN ====================
+let empresaLogoFile = null;
+let empresaLogoUrl = null;
+// Cargar información de la empresa al iniciar
+async function cargarInfoEmpresa() {
+try {
+const snap = await db.ref('config_empresa').once('value');
+const data = snap.val() || {};
+document.getElementById('empresaNombre').textContent = data.nombre || 'Multi-Admin Platform';
+document.getElementById('empresaCelular').textContent = data.celular || '-';
+document.getElementById('empresaEmail').textContent = data.email || '-';
+document.getElementById('empresaUbicacion').textContent = data.ubicacion || '-';
+document.getElementById('empresaDescripcion').textContent = data.descripcion || 'Plataforma de gestión multi-negocio';
+// Logo - CORRECCIÓN AQUÍ
+const logoContainer = document.getElementById('empresaLogoContainer');
+if (data.logo && data.logo.trim() !== '') {
+logoContainer.innerHTML = '<img src="' + data.logo + '" alt="Logo Empresa" style="width: 100%; height: 100%; object-fit: cover; border-radius: 12px;">';
+logoContainer.style.background = 'transparent';
+} else {
+logoContainer.innerHTML = '<i class="fas fa-building"></i>';
+logoContainer.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+}
+} catch (error) {
+console.error('Error cargando info de empresa:', error);
+}
+}
+// Editar empresa
+window.editarEmpresa = function() {
+document.getElementById('empresaView').classList.add('d-none');
+document.getElementById('empresaEdit').classList.remove('d-none');
+document.getElementById('btnEditarEmpresa').style.display = 'none';
+db.ref('config_empresa').once('value').then(snap => {
+const data = snap.val() || {};
+document.getElementById('editEmpresaNombre').value = data.nombre || '';
+document.getElementById('editEmpresaCelular').value = data.celular || '';
+document.getElementById('editEmpresaEmail').value = data.email || '';
+document.getElementById('editEmpresaUbicacion').value = data.ubicacion || '';
+document.getElementById('editEmpresaDescripcion').value = data.descripcion || '';
+if (data.logo) {
+const previewContainer = document.getElementById('empresaLogoPreviewContainer');
+previewContainer.innerHTML = '<img src="' + data.logo + '" style="width: 120px; height: 120px; border-radius: 12px; object-fit: cover; margin: 0 auto 12px; display: block;">';
+document.getElementById('empresaLogoUploadContainer').style.borderColor = '#22c55e';
+document.getElementById('empresaLogoUploadContainer').style.background = '#f0fdf4';
+document.getElementById('btnEliminarLogoEmpresa').style.display = 'inline-block';
+empresaLogoUrl = data.logo;
+}
+});
+};
+// Cancelar edición
+window.cancelarEdicionEmpresa = function() {
+document.getElementById('empresaView').classList.remove('d-none');
+document.getElementById('empresaEdit').classList.add('d-none');
+document.getElementById('btnEditarEmpresa').style.display = 'inline-block';
+empresaLogoFile = null;
+empresaLogoUrl = null;
+};
+// Preview logo empresa
+window.previewEmpresaLogo = function(input) {
+if (input.files && input.files[0]) {
+const file = input.files[0];
+if (file.size > 2 * 1024 * 1024) {
+alert('❌ El logo no debe superar los 2MB');
+input.value = '';
+return;
+}
+empresaLogoFile = file;
+const reader = new FileReader();
+reader.onload = function(e) {
+empresaLogoUrl = e.target.result;
+const container = document.getElementById('empresaLogoPreviewContainer');
+container.innerHTML = '<img src="' + empresaLogoUrl + '" style="width: 120px; height: 120px; border-radius: 12px; object-fit: cover; margin: 0 auto 12px; display: block;">';
+document.getElementById('empresaLogoUploadContainer').style.borderColor = '#22c55e';
+document.getElementById('empresaLogoUploadContainer').style.background = '#f0fdf4';
+document.getElementById('btnEliminarLogoEmpresa').style.display = 'inline-block';
+};
+reader.readAsDataURL(file);
+}
+};
+// Eliminar logo empresa
+window.eliminarLogoEmpresa = function() {
+empresaLogoFile = null;
+empresaLogoUrl = null;
+document.getElementById('empresaLogoInput').value = '';
+document.getElementById('empresaLogoPreviewContainer').innerHTML = '<div style="width: 120px; height: 120px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px; color: white; font-size: 3rem;"><i class="fas fa-building"></i></div>';
+document.getElementById('empresaLogoUploadContainer').style.borderColor = '#cbd5e1';
+document.getElementById('empresaLogoUploadContainer').style.background = '#f8fafc';
+document.getElementById('btnEliminarLogoEmpresa').style.display = 'none';
+};
+// Guardar información de la empresa
+document.addEventListener('DOMContentLoaded', function() {
+const formEmpresa = document.getElementById('formEmpresa');
+if (formEmpresa) {
+formEmpresa.addEventListener('submit', async function(e) {
+e.preventDefault();
+const btn = e.target.querySelector('button[type="submit"]');
+const originalText = btn.innerHTML;
+btn.disabled = true;
+btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Guardando...';
+try {
+const empresaData = {
+nombre: document.getElementById('editEmpresaNombre').value.trim(),
+celular: document.getElementById('editEmpresaCelular').value.trim(),
+email: document.getElementById('editEmpresaEmail').value.trim(),
+ubicacion: document.getElementById('editEmpresaUbicacion').value.trim(),
+descripcion: document.getElementById('editEmpresaDescripcion').value.trim(),
+actualizadoEn: Date.now()
+};
+if (empresaLogoFile) {
+showToast('📤 Subiendo logo...', 'info');
+const storageRef = firebase.storage().ref();
+const logoRef = storageRef.child('config_empresa/logo.png');
+await logoRef.put(empresaLogoFile);
+const downloadURL = await logoRef.getDownloadURL();
+empresaData.logo = downloadURL;
+} else if (empresaLogoUrl && empresaLogoUrl.includes('firebasestorage')) {
+empresaData.logo = empresaLogoUrl;
+}
+await db.ref('config_empresa').set(empresaData);
+showToast('✅ Información de la empresa actualizada', 'success');
+await cargarInfoEmpresa();
+cancelarEdicionEmpresa();
+} catch (error) {
+console.error('Error guardando empresa:', error);
+showToast('❌ Error: ' + error.message, 'error');
+} finally {
+btn.disabled = false;
+btn.innerHTML = originalText;
+}
+});
+}
+// Cargar info al iniciar
+cargarInfoEmpresa();
+});
+</script>
+</body>
+</html>
