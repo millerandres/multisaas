@@ -45,22 +45,23 @@ background-size: 400% 400%; animation: gradientShift 15s ease infinite;
 .section-title { font-size: 1.1rem; font-weight: 600; color: #64748b; margin: 0 0 1.2rem 0; padding-left: 0.2rem; text-align: center; }
 .categories-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; padding-bottom: 1rem; justify-items: center; }
 .category-card {
-    background: var(--card-bg);
-    border-radius: 24px;
-    width: 100%;
-    max-width: 240px;
-    padding: 22px 16px 18px;
-    text-align: center;
-    cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    border: 3px solid transparent;
-    box-shadow: 0 6px 20px rgba(255, 107, 157, 0.12), 0 2px 6px rgba(0,0,0,0.04);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    overflow: hidden;
+background: var(--card-bg);
+border-radius: 24px;
+width: 100%;
+max-width: 240px;
+padding: 22px 16px 18px;
+text-align: center;
+cursor: pointer;
+transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+border: 3px solid transparent;
+box-shadow: 0 6px 20px rgba(255, 107, 157, 0.12), 0 2px 6px rgba(0,0,0,0.04);
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: flex-start;
+position: relative;
+overflow: visible;
+min-height: 220px;
 }
 .category-card::before {
 content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
@@ -122,22 +123,38 @@ box-shadow: 0 8px 20px rgba(255, 107, 157, 0.4); transform: scale(1.08); padding
 
 .category-card.active .category-icon img { filter: brightness(0) invert(1); }
 .category-name {
-    font-size: 0.95rem;
-    font-weight: 700;
-    color: var(--text);
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    width: 100%;
-    line-height: 1.2;
-    position: relative;
-    z-index: 1;
-    margin-top: 16px;
+font-size: 0.9rem;
+font-weight: 700;
+color: var(--text);
+width: 100%;
+line-height: 1.3;
+position: relative;
+z-index: 1;
+margin-top: 12px;
+margin-bottom: 8px;
+white-space: normal;
+word-wrap: break-word;
+overflow: visible;
+text-overflow: clip;
+min-height: 2.6em;
+display: -webkit-box;
+-webkit-box-orient: vertical;
 }
 .category-count {
 font-size: 0.78rem; color: var(--primary-dark); margin-top: 6px;
 background: rgba(255, 107, 157, 0.12); padding: 3px 12px; border-radius: 12px;
 position: relative; z-index: 1; font-weight: 600;
+}
+@media (max-width: 480px) {
+.category-name {
+font-size: 0.85rem;
+min-height: 2.8em;
+margin-top: 10px;
+}
+.category-card {
+padding: 18px 12px 16px;
+max-width: 100%;
+}
 }
 .category-card.active .category-count { background: rgba(255, 107, 157, 0.25); color: var(--primary-dark); }
 .products-page {
@@ -896,7 +913,78 @@ padding: 14px 20px;
 .profile-auth-btn.recover:hover { background: #f9fafb; border-color: var(--primary); transform: translateY(-2px); }
 /* MODAL DE REGISTRO */
 .modal-registro .modal-content { border: none; border-radius: 24px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3); overflow: hidden; animation: modalSlideUp 0.4s ease; }
-@keyframes modalSlideUp { from { opacity: 0; transform: translateY(100px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes modalSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(50px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+#modalDetallePedido .modal-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 20px 24px;
+  position: relative;
+}
+
+#modalDetallePedido .modal-header::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+  animation: shimmer 3s infinite;
+}
+@keyframes shimmer {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(-30%, -30%); }
+}
+
+
+#modalDetallePedido .modal-title {
+  font-size: 1.2em;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+  z-index: 1;
+}
+
+#modalDetallePedido .btn-close {
+  filter: brightness(0) invert(1);
+  opacity: 0.9;
+  position: relative;
+  z-index: 1;
+}
+
+#modalDetallePedido .modal-body {
+  padding: 0;
+  max-height: 70vh;
+  overflow-y: auto;
+  background: #f8fafc;
+}
+
+#modalDetallePedido .modal-body::-webkit-scrollbar {
+  width: 6px;
+}
+
+#modalDetallePedido .modal-body::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+#modalDetallePedido .modal-body::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 10px;
+}
+
 .modal-registro .modal-header { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); border: none; padding: 28px 24px; text-align: center; position: relative; }
 .modal-registro .modal-title { color: white; font-size: 1.4rem; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 10px; margin: 0; width: 100%; }
 .modal-registro .modal-title i { font-size: 1.8rem; animation: bounceIcon 1s ease infinite; }
@@ -1188,48 +1276,66 @@ padding: 14px 20px;
 }
 
 .detalle-pedido-header {
-    padding: 20px;
-    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-    border-bottom: 2px solid #e2e8f0;
+  padding: 24px;
+  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+  border-bottom: 2px solid #bae6fd;
 }
 
 .detalle-pedido-info-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 8px 0;
-    font-size: 0.95em;
-    color: #475569;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 0;
+  font-size: 0.95em;
+  color: #475569;
+  border-bottom: 1px solid rgba(186, 230, 253, 0.5);
 }
 
+.detalle-pedido-info-item:last-child {
+  border-bottom: none;
+}
+
+
+
 .detalle-pedido-info-item i {
-    font-size: 1.2em;
-    color: #667eea;
-    width: 24px;
-    text-align: center;
+  font-size: 1.3em;
+  color: #0284c7;
+  width: 28px;
+  text-align: center;
+  background: white;
+  padding: 8px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(2, 132, 199, 0.15);
+}
+
+.detalle-pedido-info-item strong {
+  color: #0c4a6e;
+  font-weight: 700;
 }
 
 .detalle-pedido-productos-list {
-    padding: 20px;
-    max-height: 400px;
-    overflow-y: auto;
+  padding: 20px;
 }
 
 .detalle-pedido-producto-item {
-    display: grid;
-    grid-template-columns: 1fr auto auto;
-    gap: 16px;
-    padding: 16px;
-    background: #f8fafc;
-    border-radius: 12px;
-    margin-bottom: 12px;
-    align-items: center;
-    transition: all 0.3s ease;
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 16px;
+  padding: 18px;
+  background: white;
+  border-radius: 16px;
+  margin-bottom: 14px;
+  align-items: center;
+  transition: all 0.3s ease;
+  border: 2px solid #e2e8f0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 }
 
 .detalle-pedido-producto-item:hover {
-    background: #f1f5f9;
-    transform: translateX(4px);
+  background: #f8fafc;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+  border-color: #667eea;
 }
 
 .detalle-prod-info {
@@ -1238,35 +1344,43 @@ padding: 14px 20px;
 }
 
 .detalle-prod-nombre {
-    font-weight: 700;
-    color: #1e293b;
-    font-size: 1em;
-    margin-bottom: 4px;
+  font-weight: 700;
+  color: #1e293b;
+  font-size: 1em;
+  margin-bottom: 6px;
+  line-height: 1.4;
 }
 
 .detalle-prod-modo {
-    font-size: 0.85em;
-    color: #64748b;
-    margin-bottom: 2px;
+  font-size: 0.85em;
+  color: #64748b;
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.detalle-prod-unidades {
+  font-size: 0.8em;
+  color: #94a3b8;
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 
-.detalle-prod-unidades {
-    font-size: 0.8em;
-    color: #94a3b8;
-}
 
 .detalle-prod-cantidad {
     text-align: center;
 }
 
 .cantidad-badge {
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    color: white;
-    padding: 6px 14px;
-    border-radius: 20px;
-    font-weight: 700;
-    font-size: 0.9em;
-    display: inline-block;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 12px;
+  font-weight: 800;
+  font-size: 1em;
+  display: inline-block;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
 }
 
 .detalle-prod-precio {
@@ -1281,54 +1395,139 @@ padding: 14px 20px;
 }
 
 .prod-precio-subtotal {
-    font-weight: 800;
-    color: #16a34a;
-    font-size: 1.1em;
+  font-weight: 800;
+  color: #16a34a;
+  font-size: 1.15em;
+  text-shadow: 0 1px 2px rgba(22, 163, 74, 0.1);
 }
 
+
+/* Totales */
 .detalle-pedido-totales {
-    padding: 20px;
-    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
-    border-top: 2px solid #bae6fd;
+  padding: 24px;
+  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+  border-top: 2px solid #bae6fd;
 }
 
 .detalle-total-row {
-    display: flex;
-    justify-content: space-between;
-    padding: 10px 0;
-    font-size: 1em;
-    color: #475569;
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 0;
+  font-size: 1em;
+  color: #475569;
+  border-bottom: 1px solid rgba(186, 230, 253, 0.5);
+}
+
+.detalle-total-row:last-child {
+  border-bottom: none;
 }
 
 .detalle-total-row.total-final {
-    border-top: 2px solid #7dd3fc;
-    margin-top: 10px;
-    padding-top: 15px;
-    font-size: 1.3em;
-    font-weight: 800;
-    color: #0284c7;
+  border-top: 2px solid #0284c7;
+  border-bottom: none;
+  margin-top: 12px;
+  padding-top: 16px;
+  font-size: 1.4em;
+  font-weight: 800;
+  color: #0284c7;
+  text-shadow: 0 1px 2px rgba(2, 132, 199, 0.1);
 }
 
-@media (max-width: 576px) {
-    .detalle-pedido-producto-item {
-        grid-template-columns: 1fr;
-        gap: 12px;
-    }
-    
-    .detalle-prod-cantidad,
-    .detalle-prod-precio {
-        text-align: left;
-    }
-    
-    .pedido-status-actions {
-        flex-direction: column;
-    }
-    
-    .pedido-status-btn-ver {
-        width: 100%;
-        justify-content: center;
-    }
+
+/* Footer del modal */
+#modalDetallePedido .modal-footer {
+  background: white;
+  border: none;
+  padding: 16px 24px;
+  border-top: 1px solid #e2e8f0;
 }
+
+#modalDetallePedido .modal-footer .btn {
+  padding: 12px 24px;
+  border-radius: 12px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+#modalDetallePedido .modal-footer .btn-secondary {
+  background: #f1f5f9;
+  border: 2px solid #e2e8f0;
+  color: #475569;
+}
+
+#modalDetallePedido .modal-footer .btn-secondary:hover {
+  background: #e2e8f0;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+
+/* Observaciones */
+.detalle-observaciones {
+  padding: 16px 20px;
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  border-bottom: 1px solid #fde68a;
+}
+
+.detalle-observaciones-title {
+  font-weight: 700;
+  color: #92400e;
+  font-size: 0.9em;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.detalle-observaciones-text {
+  color: #78350f;
+  font-size: 0.9em;
+  line-height: 1.5;
+  font-style: italic;
+}
+
+/* Responsive */
+@media (max-width: 576px) {
+  #modalDetallePedido .modal-dialog {
+    margin: 0;
+    max-width: 100%;
+    height: 100%;
+  }
+  
+  #modalDetallePedido .modal-content {
+    border-radius: 0;
+    height: 100%;
+    max-height: 100vh;
+  }
+  
+  #modalDetallePedido .modal-body {
+    max-height: calc(100vh - 140px);
+  }
+  
+  .detalle-pedido-producto-item {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  
+  .detalle-prod-cantidad,
+  .detalle-prod-precio {
+    text-align: left;
+  }
+  
+  .detalle-pedido-header {
+    padding: 20px;
+  }
+  
+  .detalle-pedido-productos-list {
+    padding: 16px;
+  }
+  
+  .detalle-pedido-totales {
+    padding: 20px;
+  }
+}
+
+
 
 .pedido-status-btn:hover {
     background: white;
@@ -1345,6 +1544,19 @@ padding: 14px 20px;
     border-radius: 20px;
     border: none;
     box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+}
+
+#modalDetallePedido .modal-dialog {
+  margin: 10px;
+  max-width: 500px;
+}
+
+#modalDetallePedido .modal-content {
+  border-radius: 24px;
+  border: none;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+  animation: modalSlideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .detalle-pedido-header {
@@ -1504,9 +1716,7 @@ padding: 14px 20px;
             <div class="pedido-status-message" id="pedidoStatusMessage">Estamos preparando tu pedido con mucho cariño</div>
             <div id="pedidoStatusActions" class="pedido-status-actions"></div>
         </div>
-        <button class="pedido-status-close" onclick="cerrarBannerPedido()">
-            <i class="bi bi-x-lg"></i>
-        </button>
+        
     </div>
     <div class="pedido-status-progress">
         <div class="pedido-status-progress-bar" id="pedidoStatusProgressBar"></div>
@@ -3994,96 +4204,124 @@ function verDetallePedidoEnModal(pedido) {
 }
 
 // Cargar productos en el modal de detalle
+// Cargar productos en el modal de detalle
 function cargarProductosEnModalDetalle(pedido) {
-    const container = document.getElementById('detallePedidoProductos');
-    if (!container) return;
-    
-    const productos = pedido.productos || [];
-    const cliente = pedido.cliente || {};
-    const metodoEntrega = pedido.metodoEntrega || 'domicilio';
-    const metodoLabel = pedido.metodoEntregaLabel || 
-        (metodoEntrega === 'domicilio' ? '🚚 A Domicilio' : '🏪 Paso a Recoger');
-    
-    // Calcular totales
-    const subtotal = productos.reduce((sum, p) => sum + ((p.precio || 0) * (p.cantidad || p.qty || 1)), 0);
-    const valorDomicilio = pedido.valorDomicilio || 0;
-    const total = pedido.total || subtotal + valorDomicilio;
-    
-    let html = `
-        <div class="detalle-pedido-header">
-            <div class="detalle-pedido-info-item">
-                <i class="bi bi-person"></i>
-                <span><strong>Cliente:</strong> ${cliente.nombre || 'Cliente Invitado'}</span>
-            </div>
-            <div class="detalle-pedido-info-item">
-                <i class="bi bi-telephone"></i>
-                <span><strong>Teléfono:</strong> ${cliente.telefono || 'No registrado'}</span>
-            </div>
-            <div class="detalle-pedido-info-item">
-                <i class="bi bi-truck"></i>
-                <span><strong>Entrega:</strong> ${metodoLabel}</span>
-            </div>
-            ${pedido.direccion ? `
-            <div class="detalle-pedido-info-item">
-                <i class="bi bi-geo-alt"></i>
-                <span><strong>Dirección:</strong> ${pedido.direccion}</span>
-            </div>
-            ` : ''}
-            ${pedido.barrio ? `
-            <div class="detalle-pedido-info-item">
-                <i class="bi bi-map"></i>
-                <span><strong>Barrio:</strong> ${pedido.barrio}</span>
-            </div>
-            ` : ''}
+  const container = document.getElementById('detallePedidoProductos');
+  if (!container) return;
+  
+  const productos = pedido.productos || [];
+  const cliente = pedido.cliente || {};
+  const metodoEntrega = pedido.metodoEntrega || 'domicilio';
+  const metodoLabel = pedido.metodoEntregaLabel ||
+    (metodoEntrega === 'domicilio' ? '🚚 A Domicilio' : '🏪 Paso a Recoger');
+  
+  // Calcular totales
+  const subtotal = productos.reduce((sum, p) => sum + ((p.precio || 0) * (p.cantidad || p.qty || 1)), 0);
+  const valorDomicilio = pedido.valorDomicilio || 0;
+  const total = pedido.total || subtotal + valorDomicilio;
+  
+  // Iconos según método de entrega
+  const metodoIcon = metodoEntrega === 'domicilio' ? '🚚' : '🏪';
+  
+  let html = `
+    <div class="detalle-pedido-header">
+      <div class="detalle-pedido-info-item">
+        <i class="bi bi-person-fill"></i>
+        <span><strong>Cliente:</strong> ${cliente.nombre || 'Cliente Invitado'}</span>
+      </div>
+      <div class="detalle-pedido-info-item">
+        <i class="bi bi-telephone-fill"></i>
+        <span><strong>Teléfono:</strong> ${cliente.telefono || 'No registrado'}</span>
+      </div>
+      <div class="detalle-pedido-info-item">
+        <i class="bi bi-truck-fill"></i>
+        <span><strong>Entrega:</strong> ${metodoLabel}</span>
+      </div>
+      ${pedido.direccion ? `
+        <div class="detalle-pedido-info-item">
+          <i class="bi bi-geo-alt-fill"></i>
+          <span><strong>Dirección:</strong> ${pedido.direccion}</span>
         </div>
-        
-        <div class="detalle-pedido-productos-list">
-            ${productos.map((prod, index) => {
-                const cantidad = prod.cantidad || prod.qty || 1;
-                const precio = prod.precio || 0;
-                const subtotalProd = precio * cantidad;
-                const modoLabel = prod.modo === 'paquete' ? ' Paquete' : '🍦 Unidad';
-                
-                return `
-                <div class="detalle-pedido-producto-item">
-                    <div class="detalle-prod-info">
-                        <div class="detalle-prod-nombre">${prod.nombre || 'Producto sin nombre'}</div>
-                        <div class="detalle-prod-modo">${modoLabel}</div>
-                        ${prod.unidadesPorPaquete > 0 && prod.modo === 'paquete' ? `
-                            <div class="detalle-prod-unidades"><small>${prod.unidadesPorPaquete} unidades por paquete</small></div>
-                        ` : ''}
-                    </div>
-                    <div class="detalle-prod-cantidad">
-                        <span class="cantidad-badge">${cantidad}x</span>
-                    </div>
-                    <div class="detalle-prod-precio">
-                        <div class="prod-precio-unit">$${precio.toLocaleString('es-CO')}</div>
-                        <div class="prod-precio-subtotal">$${subtotalProd.toLocaleString('es-CO')}</div>
-                    </div>
-                </div>
-                `;
-            }).join('')}
+      ` : ''}
+      ${pedido.barrio ? `
+        <div class="detalle-pedido-info-item">
+          <i class="bi bi-map-fill"></i>
+          <span><strong>Barrio:</strong> ${pedido.barrio}</span>
         </div>
-        
-        <div class="detalle-pedido-totales">
-            <div class="detalle-total-row">
-                <span>Subtotal:</span>
-                <span>$${subtotal.toLocaleString('es-CO')}</span>
-            </div>
-            ${valorDomicilio > 0 ? `
-            <div class="detalle-total-row">
-                <span>Domicilio:</span>
-                <span>$${valorDomicilio.toLocaleString('es-CO')}</span>
-            </div>
-            ` : ''}
-            <div class="detalle-total-row total-final">
-                <span>TOTAL:</span>
-                <span>$${total.toLocaleString('es-CO')}</span>
-            </div>
+      ` : ''}
+    </div>
+  `;
+  
+  // Observaciones
+  if (pedido.observaciones && pedido.observaciones.trim() !== '') {
+    html += `
+      <div class="detalle-observaciones">
+        <div class="detalle-observaciones-title">
+          <i class="bi bi-chat-dots-fill"></i>
+          Observaciones del Pedido
         </div>
+        <div class="detalle-observaciones-text">
+          ${pedido.observaciones}
+        </div>
+      </div>
     `;
+  }
+  
+  // Lista de productos
+  html += `<div class="detalle-pedido-productos-list">`;
+  
+  productos.forEach((prod, index) => {
+    const cantidad = prod.cantidad || prod.qty || 1;
+    const precio = prod.precio || 0;
+    const subtotalProd = precio * cantidad;
+    const modoLabel = prod.modo === 'paquete' ? '📦 Paquete' : ' Unidad';
     
-    container.innerHTML = html;
+    html += `
+      <div class="detalle-pedido-producto-item" style="animation: slideInProduct 0.3s ease forwards; animation-delay: ${index * 0.05}s;">
+        <div class="detalle-prod-info">
+          <div class="detalle-prod-nombre">${prod.nombre || 'Producto sin nombre'}</div>
+          <div class="detalle-prod-modo">${modoLabel}</div>
+          ${prod.unidadesPorPaquete > 0 && prod.modo === 'paquete' ? `
+            <div class="detalle-prod-unidades">
+              <i class="bi bi-box-seam"></i>
+              ${prod.unidadesPorPaquete} unidades por paquete
+            </div>
+          ` : ''}
+        </div>
+        <div class="detalle-prod-cantidad">
+          <span class="cantidad-badge">${cantidad}x</span>
+        </div>
+        <div class="detalle-prod-precio">
+          <div class="prod-precio-unit">$${precio.toLocaleString('es-CO')} c/u</div>
+          <div class="prod-precio-subtotal">$${subtotalProd.toLocaleString('es-CO')}</div>
+        </div>
+      </div>
+    `;
+  });
+  
+  html += `</div>`;
+  
+  // Totales
+  html += `
+    <div class="detalle-pedido-totales">
+      <div class="detalle-total-row">
+        <span>Subtotal:</span>
+        <span>$${subtotal.toLocaleString('es-CO')}</span>
+      </div>
+      ${valorDomicilio > 0 ? `
+        <div class="detalle-total-row">
+          <span>🚚 Domicilio:</span>
+          <span>$${valorDomicilio.toLocaleString('es-CO')}</span>
+        </div>
+      ` : ''}
+      <div class="detalle-total-row total-final">
+        <span>TOTAL:</span>
+        <span>$${total.toLocaleString('es-CO')}</span>
+      </div>
+    </div>
+  `;
+  
+  container.innerHTML = html;
 }
 
 // Ocultar banner
@@ -4107,6 +4345,7 @@ function ocultarBannerPedido() {
 }
 
 // Cerrar banner manualmente
+/*
 function cerrarBannerPedido() {
     const banner = document.getElementById('pedidoStatusBanner');
     if (banner) {
@@ -4121,7 +4360,7 @@ function cerrarBannerPedido() {
     if (appHeader) {
         appHeader.classList.remove('con-banner');
     }
-}
+}*/
 
 // Agregar animación de slide up
 if (!document.getElementById('animaciones-banner')) {
@@ -4680,7 +4919,49 @@ style.textContent = `
 document.head.appendChild(style);
 
 
-
+// === FUNCIÓN DE SEGUIMIENTO DE PEDIDO EN TIEMPO REAL ===
+function iniciarSeguimientoPedido(pedidoId) {
+    if (!db || !negocioId || !pedidoId) {
+        console.error(' No se puede iniciar seguimiento:', { db, negocioId, pedidoId });
+        return;
+    }
+    
+    console.log('👂 Iniciando seguimiento del pedido:', pedidoId);
+    
+    // Limpiar listener anterior si existe
+    if (pedidoActualListenerRef && pedidoActualCallback) {
+        db.ref(`negocios/${negocioId}/pedidos/${pedidoActualId}`).off('value', pedidoActualCallback);
+    }
+    
+    pedidoActualId = pedidoId;
+    
+    // Crear callback para el listener
+    pedidoActualCallback = (snapshot) => {
+        const pedido = snapshot.val();
+        if (!pedido) {
+            console.log('️ Pedido no encontrado');
+            ocultarBannerPedido();
+            return;
+        }
+        
+        console.log('📦 Estado del pedido actualizado:', pedido.estado);
+        
+        // Mostrar banner según el estado
+        mostrarBannerPedido(pedido.estado, pedido);
+        
+        // Si el pedido está entregado o anulado, detener seguimiento después de 5 segundos
+        if (pedido.estado === 'entregado' || pedido.estado === 'completado' || pedido.estado === 'anulado') {
+            setTimeout(() => {
+                ocultarBannerPedido();
+                localStorage.removeItem('pedidoActualId');
+            }, 5000);
+        }
+    };
+    
+    // Establecer listener en tiempo real
+    pedidoActualListenerRef = db.ref(`negocios/${negocioId}/pedidos/${pedidoId}`);
+    pedidoActualListenerRef.on('value', pedidoActualCallback);
+}
 
 
 </script>
@@ -4789,27 +5070,29 @@ document.head.appendChild(style);
 
 <!-- Modal Detalle del Pedido -->
 <!-- MODAL DETALLE DEL PEDIDO -->
+<!-- MODAL DETALLE DEL PEDIDO -->
 <div class="modal fade modal-detalle-pedido" id="modalDetallePedido" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">
-                    <i class="bi bi-receipt me-2"></i>Detalle del Pedido
-                </h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body" style="padding: 0;">
-                <div id="detallePedidoProductos">
-                    <!-- Los productos se cargarán aquí dinámicamente -->
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                    <i class="bi bi-x-circle me-2"></i>Cerrar
-                </button>
-            </div>
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">
+          <i class="bi bi-receipt-cutoff"></i>
+          Detalle del Pedido
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div id="detallePedidoProductos">
+          <!-- Los productos se cargarán aquí dinámicamente -->
         </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          <i class="bi bi-x-circle me-2"></i>Cerrar
+        </button>
+      </div>
     </div>
+  </div>
 </div>
 </body>
 </html>

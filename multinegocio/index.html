@@ -542,8 +542,21 @@ onclick="document.getElementById('modalLogoInput').click()" title="Cambiar logo"
 </button>
 </div>
 <!-- Vista Lectura -->
+<!-- Vista Lectura -->
 <div id="negocioView">
 <div class="row g-3">
+<!-- Nombre del Negocio - FILA COMPLETA -->
+<div class="col-12">
+<div class="d-flex align-items-start">
+<i class="fas fa-store text-primary me-2 mt-1"></i>
+<div>
+<small class="text-muted d-block">Nombre del Negocio</small>
+<span class="fw-semibold fs-5" id="credNombreNegocio">-</span>
+</div>
+</div>
+</div>
+
+<!-- Dirección y Teléfono -->
 <div class="col-md-6">
 <div class="d-flex align-items-start">
 <i class="fas fa-map-marker-alt text-muted me-2 mt-1"></i>
@@ -562,6 +575,8 @@ onclick="document.getElementById('modalLogoInput').click()" title="Cambiar logo"
 </div>
 </div>
 </div>
+
+<!-- WhatsApp y Fecha -->
 <div class="col-md-6">
 <div class="d-flex align-items-start">
 <i class="fab fa-whatsapp text-success me-2 mt-1"></i>
@@ -580,6 +595,8 @@ onclick="document.getElementById('modalLogoInput').click()" title="Cambiar logo"
 </div>
 </div>
 </div>
+
+<!-- Tipo de Negocio -->
 <div class="col-12">
 <div class="d-flex align-items-start">
 <i class="fas fa-tag text-info me-2 mt-1"></i>
@@ -594,6 +611,10 @@ onclick="document.getElementById('modalLogoInput').click()" title="Cambiar logo"
 <!-- Vista Edición -->
 <div id="negocioEdit" class="d-none">
 <div class="row g-3">
+  <div class="col-12">
+<label class="form-label small">📛 Nombre del Negocio</label>
+<input type="text" class="form-control form-control-sm" id="editNombreNegocio" placeholder="Nombre del negocio">
+</div>
 <div class="col-md-6">
 <label class="form-label small">Dirección</label>
 <input type="text" class="form-control form-control-sm" id="editDireccion">
@@ -2550,6 +2571,7 @@ logoContainer.innerHTML = `<img src="${logoUrl}" alt="Logo" style="width: 100%; 
 } else {
 logoContainer.innerHTML = `<i class="fas fa-store"></i>`;
 }
+document.getElementById('credNombreNegocio').textContent = nombreNegocio;
 document.getElementById('credEmail').value = ownerEmail || 'No disponible';
 document.getElementById('credPassword').value = password;
 document.getElementById('credPanelLink').value = panelUrl;
@@ -2612,18 +2634,40 @@ window.editarDatosNegocio = function() {
 document.getElementById('negocioView').classList.add('d-none');
 document.getElementById('negocioEdit').classList.remove('d-none');
 document.getElementById('btnEditarNegocio').classList.add('d-none');
+
+// Cargar nombre actual
+document.getElementById('editNombreNegocio').value = document.getElementById('credNombreNegocio').textContent;
 document.getElementById('editDireccion').value = document.getElementById('credDireccion').textContent;
 document.getElementById('editTelefono').value = document.getElementById('credTelefono').textContent;
 document.getElementById('editWhatsApp').value = document.getElementById('credWhatsApp').textContent;
+
+// Cargar tipos de negocio en el select
 const selectTipo = document.getElementById('editTipoNegocio');
 selectTipo.innerHTML = '<option value="">Seleccione...</option>';
+
+const tipoActualTexto = document.getElementById('credTipoNegocio').textContent;
+let tipoActualKey = '';
+
 Object.entries(tiposNegocios).sort((a, b) => a[1].nombre.localeCompare(b[1].nombre)).forEach(([key, config]) => {
 const option = document.createElement('option');
 option.value = key;
 option.textContent = `${config.icono || '🆕'} ${config.nombre}`;
-option.selected = (key === document.getElementById('credTipoNegocio').textContent);
+if (config.nombre === tipoActualTexto) {
+option.selected = true;
+tipoActualKey = key;
+}
 selectTipo.appendChild(option);
 });
+
+// Si no se encontró por nombre, intentar por key almacenada
+if (!tipoActualKey) {
+db.ref(`negocios/${currentNegocioId}`).once('value').then(snap => {
+const data = snap.val();
+if (data && data.tipo) {
+document.getElementById('editTipoNegocio').value = data.tipo;
+}
+});
+}
 };
 window.cancelarEdicionNegocio = function() {
 document.getElementById('negocioView').classList.remove('d-none');
@@ -2635,32 +2679,71 @@ if (!currentNegocioId) {
 showToast('❌ No hay negocio seleccionado', 'error');
 return;
 }
+
+const nuevoNombre = document.getElementById('editNombreNegocio').value.trim();
 const direccion = document.getElementById('editDireccion').value.trim();
 const telefono = document.getElementById('editTelefono').value.trim();
 const whatsapp = document.getElementById('editWhatsApp').value.trim();
 const tipo = document.getElementById('editTipoNegocio').value;
+
+if (!nuevoNombre) {
+showToast('❌ El nombre del negocio es obligatorio', 'error');
+return;
+}
+
 if (!tipo) {
 showToast('❌ Seleccione un tipo de negocio', 'error');
 return;
 }
+
 try {
 showToast('💾 Guardando cambios...', 'info');
+
+// Obtener datos actuales para comparar
+const datosActualesSnap = await db.ref(`negocios/${currentNegocioId}`).once('value');
+const datosActuales = datosActualesSnap.val();
+
+// Generar nuevo slug si el nombre cambió
+const slugActualizado = nombreASlug(nuevoNombre);
+
+// Actualizar en Firebase
 await db.ref(`negocios/${currentNegocioId}`).update({
+nombre: nuevoNombre,
+slug: slugActualizado,
 direccion: direccion,
 telefono: telefono,
 whatsapp: whatsapp,
-tipo: tipo
+tipo: tipo,
+actualizadoEn: Date.now()
 });
+
+// Actualizar vista del modal
+document.getElementById('credNombreNegocio').textContent = nuevoNombre;
 document.getElementById('credDireccion').textContent = direccion || '-';
 document.getElementById('credTelefono').textContent = telefono || '-';
 document.getElementById('credWhatsApp').textContent = whatsapp || '-';
+
 const tipoConfig = tiposNegocios[tipo];
 document.getElementById('credTipoNegocio').textContent = tipoConfig ? tipoConfig.nombre : tipo;
-loadNegocios();
+
+// Actualizar URLs con el nuevo slug
+const panelUrl = `${window.location.origin}/panel.html?negocio=${slugActualizado}`;
+const appUrl = `${window.location.origin}/app.html?negocio=${slugActualizado}`;
+const posUrl = `${window.location.origin}/pos.html?negocio=${slugActualizado}`;
+document.getElementById('credPanelLink').value = panelUrl;
+document.getElementById('credAppLink').value = appUrl;
+document.getElementById('credPosLink').value = posUrl;
+
+// Recargar lista de negocios para que se vea el cambio
+await loadNegocios();
+
+// Volver a vista de lectura
 cancelarEdicionNegocio();
-showToast('✅ Datos del negocio actualizados', 'success');
+
+showToast('✅ Datos del negocio actualizados correctamente', 'success');
+
 } catch (err) {
-console.error('Error:', err);
+console.error('Error al guardar:', err);
 showToast('❌ Error al guardar: ' + err.message, 'error');
 }
 };

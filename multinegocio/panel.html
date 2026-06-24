@@ -1505,6 +1505,392 @@ body { background: #f5f7fa; min-height: 100vh; }
   background: linear-gradient(135deg, #94a3b8 0%, #64748b 100%);
 }
 
+
+/* ============================================ */
+/* RESPONSIVE - MÓVILES Y TABLETS */
+/* ============================================ */
+
+@media (max-width: 768px) {
+  /* Sidebar - Versión compacta */
+  .sidebar {
+    transform: translateX(-100%);
+    width: 260px;
+    z-index: 1001;
+  }
+  
+  .sidebar.show {
+    transform: translateX(0);
+  }
+  
+  /* Overlay para cerrar sidebar */
+  .sidebar-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 1000;
+  }
+  
+  .sidebar-overlay.show {
+    display: block;
+  }
+  
+  /* Content wrapper - Sin margen en móvil */
+  .content-wrapper {
+    margin-left: 0;
+  }
+  
+  /* Header principal */
+  .main-header {
+    padding: 12px 15px;
+  }
+  
+  .main-header h1 {
+    font-size: 1.1em;
+  }
+  
+  .header-right {
+    gap: 8px;
+  }
+  
+  .btn-logout {
+    padding: 6px 12px;
+    font-size: 0.8em;
+  }
+  
+  /* Botón menú hamburguesa */
+  .menu-toggle {
+    display: block;
+    background: none;
+    border: none;
+    font-size: 1.5em;
+    margin-right: 10px;
+    cursor: pointer;
+    color: #1e293b;
+  }
+  
+  /* Stats grid - 2 columnas en tablets, 1 en móvil */
+  .dashboard-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+  
+  .stat-card {
+    padding: 16px;
+  }
+  
+  .stat-icon {
+    width: 45px;
+    height: 45px;
+    font-size: 1.4em;
+  }
+  
+  .stat-value {
+    font-size: 1.3em;
+  }
+  
+  .stat-label {
+    font-size: 0.7em;
+  }
+  
+  /* Cards grandes - Una columna */
+  .dashboard-cards-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  
+  .card-large-body {
+    min-height: 250px;
+    padding: 16px;
+  }
+  
+  /* Pedidos - Una columna */
+  .pedidos-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  
+  .pedidos-column {
+    max-height: none;
+  }
+  
+  .column-header {
+    padding: 14px 16px;
+    font-size: 1em;
+  }
+  
+  .column-count {
+    padding: 4px 12px;
+    font-size: 0.85em;
+  }
+  
+  /* Pedido card */
+  .pedido-header {
+    padding: 12px 14px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  
+  .pedido-id {
+    font-size: 1em;
+  }
+  
+  .pedido-numero {
+    font-size: 0.85em;
+    padding: 4px 10px;
+  }
+  
+  .pedido-badge {
+    font-size: 0.75em;
+    padding: 5px 10px;
+  }
+  
+  .pedido-info {
+    padding: 12px;
+  }
+  
+  .pedido-info-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+  
+  .pedido-info-item .info-label {
+    min-width: auto;
+  }
+  
+  .pedido-productos-header,
+  .pedido-producto {
+    grid-template-columns: 1.5fr 0.8fr 1fr 0.4fr;
+    font-size: 0.8em;
+    padding: 10px 12px;
+  }
+  
+  .pedido-footer {
+    padding: 12px;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .pedido-total {
+    font-size: 1.1em;
+  }
+  
+  .pedido-actions {
+    flex-direction: column;
+    padding: 12px;
+  }
+  
+  .pedido-actions button {
+    min-width: auto;
+    width: 100%;
+  }
+  
+  /* Main content padding */
+  .main-content {
+    padding: 15px;
+  }
+  
+  /* Cards generales */
+  .card-header {
+    padding: 14px 16px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  
+  .card-body {
+    padding: 16px;
+  }
+  
+  /* Tabs */
+  .nav-tabs {
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+  
+  .nav-tab {
+    padding: 8px 14px;
+    font-size: 0.85em;
+  }
+  
+  /* Formularios */
+  .form-control {
+    padding: 10px 12px;
+    font-size: 0.9em;
+  }
+  
+  /* Botones */
+  .btn {
+    padding: 8px 16px;
+    font-size: 0.9em;
+  }
+  
+  .btn-sm {
+    padding: 6px 10px;
+    font-size: 0.8em;
+  }
+  
+  /* Tablas */
+  .table {
+    font-size: 0.85em;
+  }
+  
+  .table th,
+  .table td {
+    padding: 10px 8px;
+  }
+  
+  /* Inventario */
+  .inventario-header-inventario,
+  .producto-item-inventario {
+    grid-template-columns: 1fr 0.8fr;
+  }
+  
+  .producto-thumb-inventario,
+  .producto-thumb-placeholder-inventario {
+    width: 40px;
+    height: 40px;
+  }
+  
+  /* Modal ajustes */
+  .modal-dialog {
+    margin: 10px;
+  }
+  
+  .modal-content {
+    border-radius: 12px;
+  }
+  
+  .modal-header {
+    padding: 16px;
+  }
+  
+  .modal-body {
+    padding: 16px;
+  }
+  
+  .modal-footer {
+    padding: 12px 16px;
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .modal-footer .btn {
+    width: 100%;
+  }
+}
+
+/* Pantallas muy pequeñas */
+@media (max-width: 480px) {
+  .dashboard-stats-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .stat-card {
+    flex-direction: column;
+    text-align: center;
+    padding: 20px;
+  }
+  
+  .stat-icon {
+    width: 50px;
+    height: 50px;
+    margin-bottom: 8px;
+  }
+  
+  .pedido-productos-header,
+  .pedido-producto {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  
+  .pedido-producto-cantidad-wrapper {
+    justify-content: flex-start;
+  }
+  
+  .pedido-producto-actions {
+    text-align: left;
+  }
+  
+  /* Login box */
+  .login-box {
+    padding: 24px 20px;
+    margin: 15px;
+  }
+  
+  .login-box h3 {
+    font-size: 1.3em;
+  }
+  
+  /* Sidebar en móvil muy pequeño */
+  .sidebar {
+    width: 240px;
+  }
+  
+  .user-name,
+  .user-email {
+    font-size: 0.85em;
+  }
+  
+  /* Header compacto */
+  .main-header h1 {
+    font-size: 1em;
+  }
+  
+  .header-right span {
+    display: none;
+  }
+}
+
+/* Tablets en horizontal */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .dashboard-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .pedidos-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .sidebar {
+    width: 220px;
+  }
+  
+  .content-wrapper {
+    margin-left: 220px;
+  }
+}
+
+/* Utilidades para mostrar/ocultar sidebar en móvil */
+@media (max-width: 768px) {
+  body.sidebar-open {
+    overflow: hidden;
+  }
+  
+  .sidebar .nav-link span {
+    white-space: nowrap;
+  }
+}
+
+/* Mejorar touch targets en móvil */
+@media (max-width: 768px) {
+  .btn,
+  .nav-link,
+  .pedido-actions button,
+  .column-header {
+    min-height: 44px;
+  }
+  
+  .pedido-producto-cantidad-btn {
+    width: 36px;
+    height: 36px;
+  }
+}
 </style>
 </head>
 <body>
@@ -1531,6 +1917,7 @@ body { background: #f5f7fa; min-height: 100vh; }
 <!-- DASHBOARD SECTION -->
 <div id="dashboardSection" class="d-none">
   <aside class="sidebar" id="sidebar">
+    <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
     <div class="sidebar-header">
       <h4 id="businessNameSidebar">🏢 Cargando...</h4>
     </div>
@@ -5108,6 +5495,21 @@ setInterval(() => {
     }
 }, 5000);
 
+// ✅ Verificar preferencia guardada al cargar
+document.addEventListener('DOMContentLoaded', () => {
+  const sonidoPreferencia = localStorage.getItem('sonidoPedidos');
+  if (sonidoPreferencia === 'desactivado') {
+    setTimeout(() => {
+      const btn = document.querySelector('.btn-sonido-toggle');
+      const icono = document.getElementById('iconoSonido');
+      if (btn && icono) {
+        btn.classList.add('muted');
+        icono.className = 'bi bi-volume-mute-fill';
+      }
+    }, 500);
+  }
+});
+
 // === FUNCIÓN PARA ACTIVAR/DESACTIVAR TIPO DE VENTA ===
 function toggleVentaTipo(tipo, element) {
     // Marcar el radio button
@@ -5455,52 +5857,81 @@ window.cargarConfiguracionGeneral = async function() {
 };
 
 // === SONIDO DE NOTIFICACIÓN DE PEDIDOS ===
+
+
 let ultimoPedidoId = null;
 let sonidoReproducido = false;
 
+let listenerNuevosPedidosActivo = false;
+let audioCtx = null;
+
+// ✅ Función para inicializar AudioContext (requiere interacción del usuario)
+function inicializarAudioContext() {
+  if (!audioCtx) {
+    try {
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      console.log('✅ AudioContext inicializado');
+      return true;
+    } catch (e) {
+      console.error('❌ No se pudo inicializar AudioContext:', e);
+      return false;
+    }
+  }
+  return true;
+}
+
 // Función para reproducir sonido
 function reproducirSonidoPedido() {
-  const sonido = document.getElementById('sonidoPedido');
-  if (!sonido) {
-    console.log('⚠️ Elemento de audio no encontrado');
+  console.log(' Intentando reproducir sonido...');
+  
+  // Verificar si está muteado
+  const btn = document.querySelector('.btn-sonido-toggle');
+  if (btn && btn.classList.contains('muted')) {
+    console.log('🔇 Sonido desactivado por el usuario');
     return;
   }
   
-  // Resetear y reproducir
-  sonido.currentTime = 0;
-  sonido.volume = 0.8;
+  // Intentar 1: Elemento <audio>
+  const sonido = document.getElementById('sonidoPedido');
+  if (sonido) {
+    sonido.currentTime = 0;
+    sonido.volume = 1.0;
+    sonido.play().then(() => {
+      console.log('✅ Sonido reproducido con <audio>');
+    }).catch(error => {
+      console.log('⚠️ Error con <audio>, intentando fallback:', error.message);
+      playFallbackSound();
+    });
+    return;
+  }
   
-  sonido.play().then(() => {
-    console.log('🔊 Sonido reproducido exitosamente');
-  }).catch(error => {
-    console.log('⚠️ Error reproduciendo sonido:', error);
-    // Intentar con Audio API como fallback
-    playFallbackSound();
-  });
+  // Intentar 2: Fallback con Web Audio API
+  playFallbackSound();
 }
 
 function playFallbackSound() {
   try {
-    if (!audioContext) {
-      audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    if (!inicializarAudioContext()) return;
+    
+    // Reproducir 3 beeps
+    for (let i = 0; i < 3; i++) {
+      const oscillator = audioCtx.createOscillator();
+      const gainNode = audioCtx.createGain();
+      
+      oscillator.connect(gainNode);
+      gainNode.connect(audioCtx.destination);
+      
+      oscillator.frequency.value = 880;
+      oscillator.type = 'sine';
+      
+      const startTime = audioCtx.currentTime + (i * 0.25);
+      gainNode.gain.setValueAtTime(0.3, startTime);
+      gainNode.gain.exponentialRampToValueAtTime(0.01, startTime + 0.2);
+      
+      oscillator.start(startTime);
+      oscillator.stop(startTime + 0.2);
     }
-    
-    const oscillator = audioContext.createOscillator();
-    const gainNode = audioContext.createGain();
-    
-    oscillator.connect(gainNode);
-    gainNode.connect(audioContext.destination);
-    
-    oscillator.frequency.value = 800;
-    oscillator.type = 'sine';
-    
-    gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
-    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
-    
-    oscillator.start(audioContext.currentTime);
-    oscillator.stop(audioContext.currentTime + 0.5);
-    
-    console.log('🔊 Sonido de fallback reproducido');
+    console.log('🔊 Beep de fallback reproducido');
   } catch (error) {
     console.error('❌ Error en fallback de sonido:', error);
   }
@@ -5508,7 +5939,6 @@ function playFallbackSound() {
 
 // Mostrar notificación visual
 function mostrarNotificacionPedido(pedido) {
-  // Crear notificación toast
   const toast = document.createElement('div');
   toast.className = 'alert alert-success alert-dismissible fade show position-fixed';
   toast.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);';
@@ -5519,11 +5949,7 @@ function mostrarNotificacionPedido(pedido) {
     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
   `;
   document.body.appendChild(toast);
-  
-  // Auto-eliminar después de 5 segundos
-  setTimeout(() => {
-    toast.remove();
-  }, 5000);
+  setTimeout(() => { toast.remove(); }, 5000);
 }
 
 // Solicitar permiso para notificaciones del navegador
@@ -5548,67 +5974,82 @@ function mostrarNotificacionNavegador(pedido) {
 }
 
 // Listener para nuevos pedidos en tiempo real
+// Listener para nuevos pedidos en tiempo real
 function setupListenerNuevosPedidos() {
-  if (!db || !currentNegocioId) { // ✅ Cambiado de negocioId a currentNegocioId
-    console.log('️ Firebase o currentNegocioId no disponible para listener');
+  // ✅ Verificar que Firebase y el negocio estén listos
+  if (!db || !currentNegocioId) {
+    console.log('️ Firebase o currentNegocioId no disponible. Se reintentará...');
+    setTimeout(() => setupListenerNuevosPedidos(), 2000);
     return;
   }
   
-  console.log('📡 Configurando listener de pedidos para:', currentNegocioId);
+  // ✅ Evitar listeners duplicados
+  if (listenerNuevosPedidosActivo) {
+    console.log('⚠️ Listener ya está activo, no se duplica');
+    return;
+  }
   
-  const pedidosRef = db.ref(`negocios/${currentNegocioId}/pedidos`); // ✅ Cambiado
+  console.log(' Configurando listener de nuevos pedidos para:', currentNegocioId);
+  const pedidosRef = db.ref(`negocios/${currentNegocioId}/pedidos`);
   
-  // Escuchar nuevos pedidos
-  pedidosRef.on('child_added', (snapshot) => {
-    const pedido = snapshot.val();
-    const pedidoId = snapshot.key;
+  // ✅ PASO 1: Cargar el último pedido existente para no sonar con los antiguos
+  pedidosRef.orderByChild('timestamp').limitToLast(1).once('value').then(snapshot => {
+    snapshot.forEach(child => {
+      ultimoPedidoId = child.key;
+      console.log('✅ Último pedido existente registrado:', ultimoPedidoId);
+    });
     
-    console.log('📦 Pedido detectado:', pedidoId, pedido);
+    // ✅ PASO 2: Ahora sí activar el listener
+    listenerNuevosPedidosActivo = true;
     
-    // Verificar si es un pedido nuevo
-    if (ultimoPedidoId && pedidoId !== ultimoPedidoId) {
-      const estado = (pedido.estado || 'pendiente').toLowerCase();
+    pedidosRef.on('child_added', (snapshot) => {
+      const pedido = snapshot.val();
+      const pedidoId = snapshot.key;
+      console.log('📦 child_added detectado:', pedidoId);
       
-      // Solo reproducir sonido si es pendiente
-      if (estado === 'pendiente') {
-        console.log('🔔 NUEVO PEDIDO PENDIENTE DETECTADO:', pedidoId);
+      // ✅ Solo procesar si es un pedido NUEVO (diferente al último conocido)
+      if (ultimoPedidoId && pedidoId !== ultimoPedidoId) {
+        const estado = (pedido.estado || 'pendiente').toLowerCase();
         
-        // Reproducir sonido
-        reproducirSonidoPedido();
-        
-        // Mostrar notificaciones
-        mostrarNotificacionPedido({...pedido, id: pedidoId});
-        mostrarNotificacionNavegador({...pedido, id: pedidoId});
-        
-        // Actualizar contador de pedidos pendientes
-        actualizarContadorPedidosPendientes();
+        if (estado === 'pendiente') {
+          console.log(' NUEVO PEDIDO PENDIENTE:', pedidoId);
+          
+          // ✅ Reproducir sonido
+          reproducirSonidoPedido();
+          
+          // ✅ Mostrar notificaciones
+          mostrarNotificacionPedido({...pedido, id: pedidoId});
+          mostrarNotificacionNavegador({...pedido, id: pedidoId});
+        }
       }
-    }
-    
-    // Guardar el último pedido visto
-    if (!ultimoPedidoId) {
+      
+      // ✅ Actualizar el último pedido visto
       ultimoPedidoId = pedidoId;
-      console.log('✅ Primer pedido registrado:', pedidoId);
-    }
+    });
+    
+    console.log('✅ Listener de pedidos configurado correctamente');
+  }).catch(error => {
+    console.error('❌ Error al cargar último pedido:', error);
+    // Reintentar en 3 segundos
+    setTimeout(() => {
+      listenerNuevosPedidosActivo = false;
+      setupListenerNuevosPedidos();
+    }, 3000);
   });
   
-  // Solicitar permiso para notificaciones
+  // ✅ Solicitar permiso para notificaciones
   solicitarPermisoNotificaciones();
-  
-  console.log('✅ Listener de pedidos configurado');
 }
 
 // Actualizar contador de pedidos pendientes
 function actualizarContadorPedidosPendientes() {
-  if (!db || !currentNegocioId) return; // ✅ Cambiado
-  
-  db.ref(`negocios/${currentNegocioId}/pedidos`) // ✅ Cambiado
+  if (!db || !currentNegocioId) return;
+  db.ref(`negocios/${currentNegocioId}/pedidos`)
     .orderByChild('estado')
     .equalTo('pendiente')
     .once('value')
     .then(snapshot => {
       const count = snapshot.size || Object.keys(snapshot.val() || {}).length;
-      
       const badge = document.querySelector('.badge-pedidos-pendientes');
       if (badge) {
         badge.textContent = count;
@@ -5619,15 +6060,23 @@ function actualizarContadorPedidosPendientes() {
 
 // Inicializar cuando el DOM esté listo
 document.addEventListener('DOMContentLoaded', () => {
-  // Pequeño delay para asegurar que Firebase esté inicializado
-  //setTimeout(() => {
-   // setupListenerNuevosPedidos();
- // }, 1000);
+  // ✅ Pequeño delay para asegurar que Firebase esté inicializado
+  setTimeout(() => {
+    setupListenerNuevosPedidos();
+  }, 1000);
   
   // ✅ IMPORTANTE: Inicializar AudioContext con primera interacción del usuario
   document.addEventListener('click', () => {
-    if (!audioContext) {
-      audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    if (!window.audioContext) {
+      window.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      console.log('✅ AudioContext inicializado');
+    }
+  }, { once: true });
+  
+  // ✅ También con cualquier tecla presionada
+  document.addEventListener('keydown', () => {
+    if (!window.audioContext) {
+      window.audioContext = new (window.AudioContext || window.webkitAudioContext)();
       console.log('✅ AudioContext inicializado');
     }
   }, { once: true });
@@ -5635,23 +6084,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Función para activar/desactivar sonido
 function toggleSonido() {
-const btn = document.querySelector('.btn-sonido-toggle');
-const icono = document.getElementById('iconoSonido');
-if (!btn || !icono) {
-console.warn('⚠️ Botón de sonido no encontrado en el DOM');
-return;
-}
-if (btn.classList.contains('muted')) {
-btn.classList.remove('muted');
-icono.className = 'bi bi-volume-up-fill';
-localStorage.setItem('sonidoPedidos', 'activado');
-mostrarToast('Sonido activado 🔊', 'success');
-} else {
-btn.classList.add('muted');
-icono.className = 'bi bi-volume-mute-fill';
-localStorage.setItem('sonidoPedidos', 'desactivado');
-mostrarToast('Sonido desactivado 🔇', 'info');
-}
+  const btn = document.querySelector('.btn-sonido-toggle');
+  const icono = document.getElementById('iconoSonido');
+  if (!btn || !icono) {
+    console.warn('⚠️ Botón de sonido no encontrado en el DOM');
+    return;
+  }
+  
+  if (btn.classList.contains('muted')) {
+    btn.classList.remove('muted');
+    icono.className = 'bi bi-volume-up-fill';
+    localStorage.setItem('sonidoPedidos', 'activado');
+    window.showToast('Sonido activado 🔊', 'success');
+    // ✅ Inicializar AudioContext al activar
+    inicializarAudioContext();
+  } else {
+    btn.classList.add('muted');
+    icono.className = 'bi bi-volume-mute-fill';
+    localStorage.setItem('sonidoPedidos', 'desactivado');
+    window.showToast('Sonido desactivado 🔇', 'info');
+  }
 }
 
 // Verificar preferencia guardada
@@ -5665,6 +6117,27 @@ toggleSonido();
 }, 500);
 }
 
+// ✅ Modificar la función cargarDatosNegocio para iniciar el listener DESPUÉS del login
+const cargarDatosNegocioOriginal = cargarDatosNegocio;
+cargarDatosNegocio = async function(negocioId, user) {
+  await cargarDatosNegocioOriginal(negocioId, user);
+  
+  // ✅ Iniciar listener de nuevos pedidos después de cargar el negocio
+  setTimeout(() => {
+    console.log(' Iniciando listener de nuevos pedidos después del login...');
+    setupListenerNuevosPedidos();
+  }, 1500);
+};
+
+// ✅ Inicializar AudioContext con la primera interacción del usuario
+document.addEventListener('click', () => {
+  inicializarAudioContext();
+}, { once: true });
+
+document.addEventListener('keydown', () => {
+  inicializarAudioContext();
+}, { once: true });
+
 // ✅ IMPORTANTE: Inicializar AudioContext con primera interacción del usuario
 document.addEventListener('click', () => {
 if (!window.audioContext) {
@@ -5674,20 +6147,36 @@ console.log('✅ AudioContext inicializado');
 }, { once: true });
 });
 
+
 // Modificar la función de reproducir sonido
 function reproducirSonidoPedido() {
+  // ✅ Verificar si el sonido está desactivado
   const btn = document.querySelector('.btn-sonido-toggle');
   if (btn && btn.classList.contains('muted')) {
-    return; // No reproducir si está desactivado
+    console.log('🔇 Sonido desactivado por el usuario');
+    return;
   }
   
   const sonido = document.getElementById('sonidoPedido');
-  if (sonido) {
-    sonido.currentTime = 0; // Reiniciar audio
-    sonido.play().catch(error => {
-      console.log('⚠️ Sonido no reproducido:', error);
-    });
+  if (!sonido) {
+    console.log('⚠️ Elemento de audio no encontrado');
+    return;
   }
+  
+  console.log('🔊 Intentando reproducir sonido...');
+  
+  // ✅ Resetear y reproducir
+  sonido.currentTime = 0;
+  sonido.volume = 0.8;
+  
+  // ✅ Intentar reproducir
+  sonido.play().then(() => {
+    console.log('✅ Sonido reproducido exitosamente');
+  }).catch(error => {
+    console.log('⚠️ Error reproduciendo sonido:', error);
+    // Intentar con Audio API como fallback
+    playFallbackSound();
+  });
 }
 
 function loadNegocio(id) {
@@ -5751,6 +6240,38 @@ function getTagline(tipo) {
     };
     return tags[tipo] || tags.default;
 }
+
+// Toggle sidebar en móvil
+function toggleSidebar() {
+  const sidebar = document.querySelector('.sidebar');
+  const overlay = document.querySelector('.sidebar-overlay');
+  
+  if (!overlay) {
+    const newOverlay = document.createElement('div');
+    newOverlay.className = 'sidebar-overlay';
+    newOverlay.onclick = toggleSidebar;
+    document.body.appendChild(newOverlay);
+  }
+  
+  sidebar.classList.toggle('show');
+  document.querySelector('.sidebar-overlay').classList.toggle('show');
+  document.body.classList.toggle('sidebar-open');
+}
+
+// Cerrar sidebar al hacer click en un link (móvil)
+document.addEventListener('click', function(e) {
+  if (window.innerWidth <= 768) {
+    if (e.target.closest('.nav-link')) {
+      const sidebar = document.querySelector('.sidebar');
+      const overlay = document.querySelector('.sidebar-overlay');
+      if (sidebar && overlay) {
+        sidebar.classList.remove('show');
+        overlay.classList.remove('show');
+        document.body.classList.remove('sidebar-open');
+      }
+    }
+  }
+});
 </script>
 
 <!-- Toast Notification -->
@@ -5824,8 +6345,6 @@ function getTagline(tipo) {
   <i class="bi bi-volume-up-fill" id="iconoSonido"></i>
 </button>
 
-<button onclick="reproducirSonidoPedido()" style="position: fixed; bottom: 80px; right: 20px; z-index: 1000;" class="btn btn-warning">
-🔊 Probar Sonido
-</button>
+
 </body>
 </html>

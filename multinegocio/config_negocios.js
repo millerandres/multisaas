@@ -324,6 +324,69 @@ const CONFIG_NEGOCIOS = {
     // Colores de la marca (rosado helado)
     colores: { primary: '#FF6B9D', secondary: '#C44569' }
   },
+
+  // 💈 BARBERÍA (NUEVO)
+barberia: {
+  icono: "💈",
+  nombre: "Barbería",
+  tipo: "barberia",
+  modulos: {
+    // Core - Siempre activos
+    dashboard: true,
+    productos: false,       // No vende productos, ofrece servicios
+    categorias: true,       // Cortes, arreglos, tratamientos
+    clientes: true,
+    empleados: true,        // Barberos
+    reportes: true,
+    config: true,
+    // Específicos de barbería
+    servicios: true,        // Corte de cabello, afeitado, etc.
+    citas: true,            // Reservas de citas
+    agenda: true,           // Calendario de citas
+    caja: true,             // Control de pagos
+    // No aplican
+    pedidos: false,         // No es venta de productos
+    mesas: false,
+    comandas: false,
+    inventario: false,      // No maneja stock tradicional
+    cotizaciones: false,
+    fidelizacion: true,     // Clientes frecuentes
+    delivery: false,
+    punto_venta: false,
+    codigo_barras: false
+  },
+  // Campos específicos para servicios de barbería
+  campos_producto: [
+    'duracionServicio',     // Duración en minutos
+    'precioServicio',       // Precio del servicio
+    'barberoRequerido',     // Si requiere barbero específico
+    'categoriaServicio',    // Corte, arreglo, tratamiento
+    'requiereCita',         // Si necesita reserva previa
+    'descripcion'           // Descripción del servicio
+  ],
+  // Campos específicos para citas/reservas
+  campos_pedido: [
+    'barberoAsignado',      // Barbero que atenderá
+    'fechaCita',            // Fecha y hora
+    'duracionCita',         // Duración estimada
+    'serviciosSolicitados', // Array de servicios
+    'notasCliente',         // Notas especiales
+    'estadoCita',           // Pendiente, confirmada, completada, cancelada
+    'metodoPago',           // Efectivo, tarjeta, etc.
+    'clienteFrecuente'      // Booleano
+  ],
+  // Stats para el dashboard
+  dashboard_stats: [
+    'citas_hoy',
+    'citas_pendientes',
+    'barberos_activos',
+    'ingresos_hoy',
+    'clientes_nuevos',
+    'servicios_populares'
+  ],
+  // Colores de la marca (azul clásico barbería)
+  colores: { primary: '#3498db', secondary: '#2980b9' }
+},
   
   // 🏢 DEFAULT (fallback si no coincide ninguna vertical)
   default: {
