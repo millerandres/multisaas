@@ -13,81 +13,84 @@
     <script src="config_admin.js"></script>
     
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Courier New', monospace; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Courier New', monospace; font-weight: 900; }
         body { background: #f5f5f5; padding: 20px; }
         .ticket-container {
-            background: white; width: 320px; margin: 0 auto; padding: 15px;
-            font-size: 12px; line-height: 1.4; border: 1px solid #ddd;
+            background: white; width: 100%; max-width: 320px; margin: 0 auto; padding: 10px;
+            font-size: 14px; line-height: 1.5; border: 1px solid #ddd;
+            font-weight: 900;
         }
         .ticket-header {
-            text-align: center; border-bottom: 2px dashed #333;
+            text-align: center; border-bottom: 2px dashed #000;
             padding-bottom: 10px; margin-bottom: 10px;
         }
-        .ticket-header h1 { font-size: 18px; font-weight: bold; margin-bottom: 5px; }
-        .ticket-header .info { font-size: 10px; color: #666; }
+        .ticket-header h1 { font-size: 20px; font-weight: 900; margin-bottom: 5px; color: #000; }
+        .ticket-header .info { font-size: 13px; color: #000; font-weight: 900; }
         .ticket-info {
-            border-bottom: 1px dashed #ccc; padding-bottom: 10px; margin-bottom: 10px;
+            border-bottom: 2px dashed #000; padding-bottom: 10px; margin-bottom: 10px;
         }
         .ticket-info .row {
             display: flex; justify-content: space-between;
-            margin-bottom: 3px; font-size: 11px;
+            margin-bottom: 5px; font-size: 14px; font-weight: 900;
         }
         .ticket-info .row.datos-destacados {
-            font-size: 13px; margin: 8px 0; padding: 5px;
-            background: #f9f9f9; border-left: 3px solid #333;
+            font-size: 15px; margin: 10px 0; padding: 8px;
+            background: #f0f0f0; border-left: 4px solid #000;
+            font-weight: 900;
         }
         .ticket-info .row.datos-destacados span:last-child {
-            font-size: 13px; font-weight: bold;
+            font-size: 15px; font-weight: 900;
         }
         .ticket-items {
-            border-bottom: 1px dashed #ccc; padding-bottom: 10px; margin-bottom: 10px;
+            border-bottom: 2px dashed #000; padding-bottom: 10px; margin-bottom: 10px;
         }
         .ticket-item {
             display: flex; justify-content: space-between;
-            margin-bottom: 5px; font-size: 11px;
+            margin-bottom: 8px; font-size: 14px; font-weight: 900;
         }
-        .item-info { flex: 1; }
-        .item-name { font-weight: bold; }
-        .item-qty { margin: 0 10px; color: #666; }
-        .item-price { font-weight: bold; }
+        .item-info { flex: 1; font-weight: 900; }
+        .item-name { font-weight: 900; font-size: 14px; color: #000; }
+        .item-qty { margin: 0 10px; color: #000; font-weight: 900; }
+        .item-price { font-weight: 900; color: #000; }
         .ticket-observaciones {
-            border-top: 2px dashed #333; border-bottom: 2px dashed #333;
+            border-top: 2px dashed #000; border-bottom: 2px dashed #000;
             padding: 10px 0; margin: 10px 0;
         }
         .ticket-observaciones .label {
-            font-size: 12px; color: #333; margin-bottom: 5px;
-            text-transform: uppercase; letter-spacing: 1px;
+            font-size: 14px; color: #000; margin-bottom: 5px;
+            text-transform: uppercase; letter-spacing: 1px; font-weight: 900;
         }
         .ticket-observaciones .texto {
-            font-size: 13px; color: #333; font-weight: bold;
-            line-height: 1.5; text-transform: uppercase;
+            font-size: 14px; color: #000; font-weight: 900;
+            line-height: 1.6; text-transform: uppercase;
         }
         .ticket-totals {
-            border-bottom: 2px dashed #333; padding-bottom: 10px; margin-bottom: 10px;
+            border-bottom: 3px double #000; padding-bottom: 10px; margin-bottom: 10px;
         }
         .total-row {
             display: flex; justify-content: space-between;
-            margin-bottom: 3px; font-size: 11px;
+            margin-bottom: 5px; font-size: 14px; font-weight: 900;
         }
         .total-row.grand-total {
-            font-size: 16px; font-weight: bold; margin-top: 5px;
-            padding-top: 5px; border-top: 1px solid #ccc;
+            font-size: 18px; font-weight: 900; margin-top: 8px;
+            padding-top: 8px; border-top: 2px solid #000;
+            color: #000;
         }
         .ticket-footer {
-            text-align: center; font-size: 12px; color: #333;
+            text-align: center; font-size: 13px; color: #000;
             padding-top: 10px;
         }
         .thank-you { 
-            font-weight: bold; font-size: 14px; margin-bottom: 8px; color: #000;
+            font-weight: 900; font-size: 16px; margin-bottom: 8px; color: #000;
         }
-        .message { margin-bottom: 5px; color: #333; font-size: 11px; }
+        .message { margin-bottom: 5px; color: #000; font-size: 12px; font-weight: 900; }
         .action-buttons {
             position: fixed; bottom: 20px; left: 50%;
             transform: translateX(-50%); display: flex; gap: 10px; z-index: 1000;
         }
         .btn {
             padding: 12px 24px; border: none; border-radius: 8px;
-            font-size: 14px; font-weight: bold; cursor: pointer; transition: all 0.2s;
+            font-size: 14px; font-weight: 900; cursor: pointer; transition: all 0.2s;
         }
         .btn-close { background: #6c757d; color: white; }
         .btn-close:hover { background: #5a6268; }
@@ -96,28 +99,29 @@
         .error-msg {
             text-align: center; padding: 40px; color: #dc2626; font-size: 14px;
         }
-        .error-msg h2 { color: #dc2626; margin-bottom: 10px; font-size: 24px; }
-        .error-msg p { margin-bottom: 20px; }
+        .error-msg h2 { color: #dc2626; margin-bottom: 10px; font-size: 24px; font-weight: 900; }
+        .error-msg p { margin-bottom: 20px; font-weight: 900; }
         .debug-info {
             background: #fff3cd; border: 1px solid #ffc107; border-radius: 8px;
             padding: 12px; margin: 10px 0; font-size: 11px; color: #856404;
             font-family: monospace; word-break: break-all;
+            font-weight: 900;
         }
         @media print {
             body { background: white; padding: 0; }
-            .ticket-container { width: 100%; border: none; margin: 0; padding: 10px; }
+            .ticket-container { width: 100%; max-width: 100%; border: none; margin: 0; padding: 5px; }
             .action-buttons, .debug-info { display: none !important; }
         }
     </style>
 </head>
 <body>
     <div class="ticket-container" id="ticket">
-        <p style="text-align:center; padding:40px;">Cargando...</p>
+        <p style="text-align:center; padding:40px; font-weight: 900;">Cargando...</p>
     </div>
 
     <div class="action-buttons">
         <button class="btn btn-close" onclick="window.close()">Cerrar</button>
-        <button class="btn btn-print" onclick="window.print()">️ Imprimir</button>
+        <button class="btn btn-print" onclick="window.print()">🖨️ Imprimir</button>
     </div>
 
     <script>
@@ -155,7 +159,7 @@
         async function buscarNegocio(negocioParam) {
             if (!db) return { id: null, data: null };
             
-            console.log(' Buscando negocio:', negocioParam);
+            console.log('🔍 Buscando negocio:', negocioParam);
             
             // Si empieza con "-", es un ID interno de Firebase
             if (negocioParam.startsWith('-')) {
@@ -167,7 +171,7 @@
             }
             
             // Buscar por slug en todos los negocios
-            console.log(' Buscando por slug...');
+            console.log('🔍 Buscando por slug...');
             const snapshot = await db.ref('negocios').once('value');
             let negocioEncontrado = null;
             let negocioIdEncontrado = null;
@@ -251,7 +255,7 @@
             const ticketDiv = document.getElementById('ticket');
             ticketDiv.innerHTML = `
                 <div class="error-msg">
-                    <h2>️ ${titulo}</h2>
+                    <h2>⚠️ ${titulo}</h2>
                     <p>${detalle}</p>
                     <button class="btn btn-close" onclick="window.close()" style="margin-top:20px;">Cerrar</button>
                 </div>
@@ -280,11 +284,11 @@
             const metodoEntrega = pedido.metodoEntrega || 'domicilio';
             let tipoEntregaHTML = '';
             if (metodoEntrega === 'domicilio') {
-                tipoEntregaHTML = '🚚 <strong>A Domicilio</strong>';
+                tipoEntregaHTML = '🚚 <strong style="font-weight: 900;">A Domicilio</strong>';
             } else if (metodoEntrega === 'recoger') {
-                tipoEntregaHTML = '🏪 <strong>Paso a Recoger</strong>';
+                tipoEntregaHTML = '🏪 <strong style="font-weight: 900;">Paso a Recoger</strong>';
             } else {
-                tipoEntregaHTML = '🍽️ <strong>En Mesa</strong>';
+                tipoEntregaHTML = '🍽️ <strong style="font-weight: 900;">En Mesa</strong>';
             }
             
             // Productos
@@ -293,7 +297,7 @@
             let subtotal = 0;
             
             if (productos.length === 0) {
-                productosHTML = '<div style="text-align:center; padding:20px;">Sin productos</div>';
+                productosHTML = '<div style="text-align:center; padding:20px; font-weight: 900;">Sin productos</div>';
             } else {
                 productos.forEach(producto => {
                     const cantidad = producto.cantidad || producto.qty || 1;
@@ -307,10 +311,10 @@
                     productosHTML += `
                         <div class="ticket-item">
                             <div class="item-info">
-                                <div class="item-name">${modoLabel} ${producto.nombre || 'Producto'}</div>
+                                <div class="item-name" style="font-weight: 900;">${modoLabel} ${producto.nombre || 'Producto'}</div>
                             </div>
-                            <div class="item-qty">x${cantidad}</div>
-                            <div class="item-price">$${formatearPrecio(itemTotal)}</div>
+                            <div class="item-qty" style="font-weight: 900;">x${cantidad}</div>
+                            <div class="item-price" style="font-weight: 900;">$${formatearPrecio(itemTotal)}</div>
                         </div>
                     `;
                 });
@@ -324,8 +328,8 @@
             if (pedido.observaciones && pedido.observaciones.trim() !== '') {
                 observacionesHTML = `
                     <div class="ticket-observaciones">
-                        <div class="label">📝 OBSERVACIONES:</div>
-                        <div class="texto">${pedido.observaciones}</div>
+                        <div class="label" style="font-weight: 900;">📝 OBSERVACIONES:</div>
+                        <div class="texto" style="font-weight: 900;">${pedido.observaciones}</div>
                     </div>
                 `;
             }
@@ -334,16 +338,16 @@
             let direccionHTML = '';
             if (metodoEntrega === 'domicilio' && pedido.direccion) {
                 direccionHTML = `
-                    <div class="row datos-destacados">
-                        <span><strong>📍 Dir:</strong></span>
-                        <span>${pedido.direccion}</span>
+                    <div class="row datos-destacados" style="font-weight: 900;">
+                        <span style="font-weight: 900;"><strong style="font-weight: 900;">📍 Dir:</strong></span>
+                        <span style="font-weight: 900;">${pedido.direccion}</span>
                     </div>
                 `;
                 if (pedido.barrio) {
                     direccionHTML += `
-                        <div class="row">
-                            <span><strong>Barrio:</strong></span>
-                            <span>${pedido.barrio}</span>
+                        <div class="row" style="font-weight: 900;">
+                            <span style="font-weight: 900;"><strong style="font-weight: 900;">Barrio:</strong></span>
+                            <span style="font-weight: 900;">${pedido.barrio}</span>
                         </div>
                     `;
                 }
@@ -353,30 +357,30 @@
             const ticketHTML = `
                 <!-- Header -->
                 <div class="ticket-header">
-                    <h1>${(negocioData.nombre || 'NEGOCIO').toUpperCase()}</h1>
-                    ${negocioData.direccion ? `<div class="info">${negocioData.direccion}</div>` : ''}
-                    ${negocioData.telefono || negocioData.whatsapp ? `<div class="info">Tel: ${negocioData.telefono || negocioData.whatsapp}</div>` : ''}
-                    <div class="info">${fechaStr}</div>
-                    <div class="info">${horaStr}</div>
+                    <h1 style="font-weight: 900;">${(negocioData.nombre || 'NEGOCIO').toUpperCase()}</h1>
+                    ${negocioData.direccion ? `<div class="info" style="font-weight: 900;">${negocioData.direccion}</div>` : ''}
+                    ${negocioData.telefono || negocioData.whatsapp ? `<div class="info" style="font-weight: 900;">Tel: ${negocioData.telefono || negocioData.whatsapp}</div>` : ''}
+                    <div class="info" style="font-weight: 900;">${fechaStr}</div>
+                    <div class="info" style="font-weight: 900;">${horaStr}</div>
                 </div>
 
                 <!-- Info del pedido -->
                 <div class="ticket-info">
-                    <div class="row">
-                        <span><strong>Pedido #:</strong></span>
-                        <span>#${idCorto}</span>
+                    <div class="row" style="font-weight: 900;">
+                        <span style="font-weight: 900;"><strong style="font-weight: 900;">Pedido #:</strong></span>
+                        <span style="font-weight: 900;">#${idCorto}</span>
                     </div>
-                    <div class="row">
-                        <span><strong>Cliente:</strong></span>
-                        <span>${cliente.nombre || 'Cliente Invitado'}</span>
+                    <div class="row" style="font-weight: 900;">
+                        <span style="font-weight: 900;"><strong style="font-weight: 900;">Cliente:</strong></span>
+                        <span style="font-weight: 900;">${cliente.nombre || 'Cliente Invitado'}</span>
                     </div>
-                    <div class="row datos-destacados">
-                        <span><strong> Tel:</strong></span>
-                        <span>${cliente.telefono || cliente.celular || 'No registrado'}</span>
+                    <div class="row datos-destacados" style="font-weight: 900;">
+                        <span style="font-weight: 900;"><strong style="font-weight: 900;">📱 Tel:</strong></span>
+                        <span style="font-weight: 900;">${cliente.telefono || cliente.celular || 'No registrado'}</span>
                     </div>
-                    <div class="row">
-                        <span><strong>Tipo:</strong></span>
-                        <span>${tipoEntregaHTML}</span>
+                    <div class="row" style="font-weight: 900;">
+                        <span style="font-weight: 900;"><strong style="font-weight: 900;">Tipo:</strong></span>
+                        <span style="font-weight: 900;">${tipoEntregaHTML}</span>
                     </div>
                     ${direccionHTML}
                 </div>
@@ -390,21 +394,21 @@
 
                 <!-- Totales -->
                 <div class="ticket-totals">
-                    <div class="total-row">
-                        <span>Subtotal:</span>
-                        <span>$${formatearPrecio(subtotal)}</span>
+                    <div class="total-row" style="font-weight: 900;">
+                        <span style="font-weight: 900;">Subtotal:</span>
+                        <span style="font-weight: 900;">$${formatearPrecio(subtotal)}</span>
                     </div>
-                    <div class="total-row grand-total">
-                        <span>TOTAL:</span>
-                        <span>$${formatearPrecio(totalFinal)}</span>
+                    <div class="total-row grand-total" style="font-weight: 900;">
+                        <span style="font-weight: 900;">TOTAL:</span>
+                        <span style="font-weight: 900;">$${formatearPrecio(totalFinal)}</span>
                     </div>
                 </div>
 
                 <!-- Footer -->
                 <div class="ticket-footer">
-                    <div class="thank-you">¡GRACIAS POR SU COMPRA!</div>
-                    <div class="message">Vuelva pronto</div>
-                    <div class="message" style="margin-top: 10px; font-size: 11px;">
+                    <div class="thank-you" style="font-weight: 900;">¡GRACIAS POR SU COMPRA!</div>
+                    <div class="message" style="font-weight: 900;">Vuelva pronto</div>
+                    <div class="message" style="margin-top: 10px; font-size: 11px; font-weight: 900;">
                         Este ticket es válido como comprobante de compra
                     </div>
                 </div>

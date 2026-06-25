@@ -2076,79 +2076,92 @@ container.innerHTML = `
 });
 }
 function renderNegocios(negocios) {
-const container = document.getElementById('negociosList');
-if (negocios.length === 0) {
-container.innerHTML = `
-<div class="no-results">
-<i class="fas fa-search"></i>
-<h5>No se encontraron resultados</h5>
-<p>Intenta con otros términos de búsqueda</p>
-</div>
-`;
-return;
-}
-container.innerHTML = '';
-negocios.forEach(negocio => {
-const negocioSlug = negocio.slug || nombreASlug(negocio.nombre);
-const panelUrl = `${window.location.origin}/panel.html?negocio=${negocioSlug}`;
-const appUrl = `${window.location.origin}/app.html?negocio=${negocioSlug}`;
-const membresiaBadge = obtenerBadgeMembresia(negocio.membresia);
-const row = document.createElement('div');
-row.className = 'business-row';
-const logoHTML = negocio.logo
-? `<img src="${negocio.logo}" alt="${negocio.nombre}" onerror="this.parentElement.innerHTML='<i class=\\'fas fa-store\\'></i>'">`
-: `<i class="fas fa-store"></i>`;
-const negocioIdEscaped = negocio.id.replace(/'/g, "\\'");
-const ownerUidEscaped = (negocio.ownerUid || '').replace(/'/g, "\\'");
-const ownerEmailEscaped = (negocio.ownerEmail || '').replace(/'/g, "\\'");
-const logoUrlEscaped = (negocio.logo || '').replace(/'/g, "\\'");
-row.innerHTML = `
-<div class="business-info" style="flex: 1.5; min-width: 250px;">
-<div class="d-flex align-items-center gap-3">
-<div class="business-logo-box">
-${logoHTML}
-</div>
-<div>
-<div class="business-name">${negocio.nombre}</div>
-<div class="business-meta">
-<span><i class="fas fa-user-tie"></i>${negocio.ownerEmail}</span>
-${negocio.direccion ? `<span><i class="fas fa-map-marker-alt"></i>${negocio.direccion}</span>` : ''}
-</div>
-</div>
-</div>
-</div>
-<div style="flex: 0.8;">
-<div class="category-section">
-<span class="badge-tipo-compact">${negocio.tipoNombre}</span>
-<span class="status-indicator ${negocio.activo ? 'status-active' : 'status-inactive'}">
-<i class="fas fa-${negocio.activo ? 'check-circle' : 'pause-circle'}"></i>
-${negocio.activo ? 'Activo' : 'Inactivo'}
-</span>
-</div>
-</div>
-<div style="flex: 0.9;">
-${membresiaBadge}
-</div>
-<div style="flex: 0.7;">
-<button class="btn btn-sm btn-outline-info w-100" onclick="imprimirFacturaNegocio('${negocioIdEscaped}', '${negocio.nombre.replace(/'/g, "\\'")}')"
-title="Imprimir factura del negocio" style="font-size: 0.8rem; padding: 6px;">
-<i class="fas fa-print me-1"></i> Factura
-</button>
-</div>
-<div class="actions-section">
-<a href="${panelUrl}" target="_blank" class="btn btn-action-compact btn-panel">
-<i class="fas fa-tachometer-alt"></i>Panel
-</a>
-<a href="${appUrl}" target="_blank" class="btn btn-action-compact btn-app">
-<i class="fas fa-mobile-alt"></i>App
-</a>
-<button class="btn btn-action-compact btn-credenciales" onclick="verCredenciales('${negocioIdEscaped}', '${ownerUidEscaped}', '${ownerEmailEscaped}', '${logoUrlEscaped}')">
-<i class="fas fa-key"></i>Credenciales
-</button>
-</div>
-`;
-container.appendChild(row);
-});
+  const container = document.getElementById('negociosList');
+  if (negocios.length === 0) {
+    container.innerHTML = `
+    <div class="no-results">
+    <i class="fas fa-search"></i>
+    <h5>No se encontraron resultados</h5>
+    <p>Intenta con otros términos de búsqueda</p>
+    </div>
+    `;
+    return;
+  }
+  container.innerHTML = '';
+  
+  negocios.forEach(negocio => {
+    const negocioSlug = negocio.slug || nombreASlug(negocio.nombre);
+    
+    // 🔥 CORRECCIÓN: URLs condicionales según tipo de negocio
+    let panelUrl, appUrl, posUrl;
+    
+    if (negocio.tipo === 'barberia') {
+      panelUrl = `${window.location.origin}/barberia/panel.html?negocio=${negocioSlug}`;
+      appUrl = `${window.location.origin}/barberia/app.html?negocio=${negocioSlug}`;
+      posUrl = `${window.location.origin}/barberia/pos.html?negocio=${negocioSlug}`;
+    } else {
+      panelUrl = `${window.location.origin}/panel.html?negocio=${negocioSlug}`;
+      appUrl = `${window.location.origin}/app.html?negocio=${negocioSlug}`;
+      posUrl = `${window.location.origin}/pos.html?negocio=${negocioSlug}`;
+    }
+    
+    const membresiaBadge = obtenerBadgeMembresia(negocio.membresia);
+    const row = document.createElement('div');
+    row.className = 'business-row';
+    const logoHTML = negocio.logo
+    ? `<img src="${negocio.logo}" alt="${negocio.nombre}" onerror="this.parentElement.innerHTML='<i class=\\'fas fa-store\\'></i>'">`
+    : `<i class="fas fa-store"></i>`;
+    const negocioIdEscaped = negocio.id.replace(/'/g, "\\'");
+    const ownerUidEscaped = (negocio.ownerUid || '').replace(/'/g, "\\'");
+    const ownerEmailEscaped = (negocio.ownerEmail || '').replace(/'/g, "\\'");
+    const logoUrlEscaped = (negocio.logo || '').replace(/'/g, "\\'");
+    row.innerHTML = `
+    <div class="business-info" style="flex: 1.5; min-width: 250px;">
+    <div class="d-flex align-items-center gap-3">
+    <div class="business-logo-box">
+    ${logoHTML}
+    </div>
+    <div>
+    <div class="business-name">${negocio.nombre}</div>
+    <div class="business-meta">
+    <span><i class="fas fa-user-tie"></i>${negocio.ownerEmail}</span>
+    ${negocio.direccion ? `<span><i class="fas fa-map-marker-alt"></i>${negocio.direccion}</span>` : ''}
+    </div>
+    </div>
+    </div>
+    </div>
+    <div style="flex: 0.8;">
+    <div class="category-section">
+    <span class="badge-tipo-compact">${negocio.tipoNombre}</span>
+    <span class="status-indicator ${negocio.activo ? 'status-active' : 'status-inactive'}">
+    <i class="fas fa-${negocio.activo ? 'check-circle' : 'pause-circle'}"></i>
+    ${negocio.activo ? 'Activo' : 'Inactivo'}
+    </span>
+    </div>
+    </div>
+    <div style="flex: 0.9;">
+    ${membresiaBadge}
+    </div>
+    <div style="flex: 0.7;">
+    <button class="btn btn-sm btn-outline-info w-100" onclick="imprimirFacturaNegocio('${negocioIdEscaped}', '${negocio.nombre.replace(/'/g, "\\'")}')"
+    title="Imprimir factura del negocio" style="font-size: 0.8rem; padding: 6px;">
+    <i class="fas fa-print me-1"></i> Factura
+    </button>
+    </div>
+    <div class="actions-section">
+    <a href="${panelUrl}" target="_blank" class="btn btn-action-compact btn-panel">
+    <i class="fas fa-tachometer-alt"></i>Panel
+    </a>
+    <a href="${appUrl}" target="_blank" class="btn btn-action-compact btn-app">
+    <i class="fas fa-mobile-alt"></i>App
+    </a>
+    <button class="btn btn-action-compact btn-credenciales" onclick="verCredenciales('${negocioIdEscaped}', '${ownerUidEscaped}', '${ownerEmailEscaped}', '${logoUrlEscaped}')">
+    <i class="fas fa-key"></i>Credenciales
+    </button>
+    </div>
+    `;
+    container.appendChild(row);
+  });
 }
 function obtenerBadgeMembresia(membresia) {
 if (!membresia) {
@@ -2562,9 +2575,18 @@ throw new Error('Negocio no encontrado');
 }
 const nombreNegocio = negocioData.nombre || `Negocio ${negocioId.substr(0, 6)}`;
 const negocioSlug = negocioData.slug || nombreASlug(nombreNegocio);
-const panelUrl = `${window.location.origin}/panel.html?negocio=${negocioSlug}`;
-const appUrl = `${window.location.origin}/app.html?negocio=${negocioSlug}`;
-const posUrl = `${window.location.origin}/pos.html?negocio=${negocioSlug}`;
+
+let panelUrl, appUrl, posUrl;
+if (negocioData.tipo === 'barberia') {
+  panelUrl = `${window.location.origin}/barberia/panel.html?negocio=${negocioSlug}`;
+  appUrl = `${window.location.origin}/barberia/app.html?negocio=${negocioSlug}`;
+  posUrl = `${window.location.origin}/barberia/pos.html?negocio=${negocioSlug}`;
+} else {
+  panelUrl = `${window.location.origin}/panel.html?negocio=${negocioSlug}`;
+  appUrl = `${window.location.origin}/app.html?negocio=${negocioSlug}`;
+  posUrl = `${window.location.origin}/pos.html?negocio=${negocioSlug}`;
+}
+
 const logoContainer = document.getElementById('credLogoContainer');
 if (logoUrl) {
 logoContainer.innerHTML = `<img src="${logoUrl}" alt="Logo" style="width: 100%; height: 100%; object-fit: cover; border-radius: 12px;">`;
