@@ -3433,29 +3433,50 @@ window.cargarDashboard = async function() {
         const ultimos5 = actividadReciente.slice(0, 5);
         
         // Procesar productos del inventario
-        let productosInventario = [];
-        const menu = menuSnap.val() || {};
-        
-        Object.entries(menu).forEach(([catId, categoria]) => {
-            if (categoria && categoria.productos) {
-                Object.entries(categoria.productos).forEach(([prodId, producto]) => {
-                    const unidades = parseInt(producto.porUnidad) || 0;
-                    productosInventario.push({
-                        id: prodId,
-                        categoriaId: catId,
-                        nombre: producto.nombre || 'Sin nombre',
-                        categoria: categoria.nombre || 'Sin categoría',
-                        icono: categoria.icono || '',
-                        imagen: producto.imagen || null,
-                        unidades: unidades,
-                        precioUnidad: producto.precioUnidad || 0
-                    });
-                });
+       // ✅ CORREGIDO: Procesar productos del inventario
+let productosInventario = [];
+const menu = menuSnap.val() || {};
+Object.entries(menu).forEach(([catId, categoria]) => {
+    if (categoria && categoria.productos) {
+        Object.entries(categoria.productos).forEach(([prodId, producto]) => {
+            // ✅ Leer stock de diferentes campos posibles
+            const stockTotal = parseInt(producto.stockTotal) || 0;
+            const stock = parseInt(producto.stock) || 0;
+            const porUnidad = parseInt(producto.porUnidad) || 0;
+            const porPaquete = parseInt(producto.porPaquete) || 0;
+            
+            // ✅ Usar el valor más apropiado según el tipo de negocio
+            let unidades = 0;
+            if (stockTotal > 0) {
+                unidades = stockTotal;
+            } else if (stock > 0) {
+                unidades = stock;
+            } else if (porUnidad > 0) {
+                unidades = porUnidad;
+            } else if (porPaquete > 0) {
+                unidades = porPaquete;
             }
+            
+            productosInventario.push({
+                id: prodId,
+                categoriaId: catId,
+                nombre: producto.nombre || 'Sin nombre',
+                categoria: categoria.nombre || 'Sin categoría',
+                icono: categoria.icono || '',
+                imagen: producto.imagen || null,
+                unidades: unidades,
+                precioUnidad: producto.precioUnidad || producto.precioDia || 0,
+                stockTotal: stockTotal,
+                stock: stock,
+                porUnidad: porUnidad,
+                porPaquete: porPaquete
+            });
         });
-        
-        // ✅ ORDENAR: Primero los que tienen MENOS unidades, luego los que tienen MÁS
-        productosInventario.sort((a, b) => b.unidades - a.unidades);
+    }
+});
+
+// ✅ ORDENAR: Primero los que tienen MENOS unidades, luego los que tienen MÁS
+productosInventario.sort((a, b) => b.unidades - a.unidades);
         
         const fmtPrecio = (n) => new Intl.NumberFormat('es-CO').format(n);
         
@@ -3549,6 +3570,7 @@ window.cargarDashboard = async function() {
         // ✅ NUEVO: Renderizar inventario de productos (sin columna paquetes, ordenado por unidades)
 // ✅ NUEVO: Renderizar inventario de productos (sin columna paquetes, ordenado por unidades)
 // ✅ Renderizar inventario de productos (ordenado de mayor a menor)
+// ✅ CORREGIDO: Renderizar inventario de productos
 const inventarioEl = document.getElementById('inventario-productos');
 if (inventarioEl && productosInventario.length > 0) {
     inventarioEl.innerHTML = `
@@ -3560,6 +3582,8 @@ if (inventarioEl && productosInventario.length > 0) {
             ${productosInventario.map((prod, index) => {
                 let badgeClass = 'badge-unidades';
                 let badgeStyle = '';
+                
+                // ✅ Determinar color según cantidad
                 if (prod.unidades === 0) {
                     badgeClass = 'badge-cero';
                 } else if (prod.unidades <= 5) {
@@ -3569,6 +3593,7 @@ if (inventarioEl && productosInventario.length > 0) {
                 } else {
                     badgeStyle = 'background: linear-gradient(135deg, #22c55e, #16a34a);';
                 }
+                
                 return `
                     <div class="producto-item-inventario" onclick="window.verProductoInventario('${prod.categoriaId}', '${prod.id}')" style="cursor: pointer; animation: slideInProduct 0.3s ease forwards; animation-delay: ${index * 0.05}s;">
                         <div class="producto-info-inventario">
