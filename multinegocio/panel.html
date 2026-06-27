@@ -1891,6 +1891,275 @@ body { background: #f5f7fa; min-height: 100vh; }
     height: 36px;
   }
 }
+/* BOTÓN EXPANDIR */
+.btn-expandir {
+    background: rgba(255, 255, 255, 0.2);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 0.9em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    backdrop-filter: blur(10px);
+}
+
+.btn-expandir:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.btn-expandir i {
+    transition: transform 0.3s ease;
+}
+
+.btn-expandir.expandido i {
+    transform: rotate(180deg);
+}
+
+/* CARD LARGE SIN FOOTER */
+.dashboard-card-large .card-large-body {
+    transition: all 0.4s ease;
+    max-height: 0;
+    overflow: hidden;
+    padding: 0 28px;
+    opacity: 0;
+}
+
+.dashboard-card-large .card-large-body.expandido {
+    max-height: 2000px;
+    padding: 24px 28px;
+    opacity: 1;
+}
+
+/* TOP 5 PRODUCTOS */
+.top5-chart-container {
+    width: 100%;
+    height: 400px;
+    position: relative;
+}
+
+.top5-bar-chart {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-around;
+    height: 400px; /* Más alto para dar espacio a las etiquetas */
+    padding: 20px 8px 80px 8px; /* Extra padding inferior */
+    gap: 12px;
+}
+
+.top5-bar-wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    height: 100%;
+    position: relative;
+    min-width: 0; /* Evita desbordamientos en móviles */
+}
+
+.top5-bar {
+    width: 100%;
+    max-width: 120px;
+    border-radius: 12px 12px 0 0;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.top5-bar:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+}
+
+.top5-bar-value {
+    position: absolute;
+    top: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 0.9em;
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.top5-bar-wrapper:hover .top5-bar-value {
+    opacity: 1;
+}
+
+.top5-bar-label {
+    margin-top: 16px;
+    text-align: center;
+    font-weight: 600;
+    color: #1e293b;
+    font-size: 0.82em;
+    padding: 0 6px;
+    line-height: 1.35;
+    max-width: 160px;
+    width: 100%;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
+    display: -webkit-box;
+    line-clamp: 3; /* Permite hasta 3 líneas */
+    -webkit-box-orient: vertical;
+    white-space: normal; /* Permite salto de línea natural */
+    overflow: visible; /* Muestra el texto completo */
+}
+
+.top5-bar-quantity {
+    margin-top: 4px;
+    font-size: 0.75em;
+    color: #64748b;
+    font-weight: 500;
+}
+
+/* Colores para las barras */
+.top5-bar-1 { background: linear-gradient(135deg, #8b9bf7 0%, #7f8ff4 100%); }
+.top5-bar-2 { background: linear-gradient(135deg, #9a87d4 0%, #8b73d1 100%); }
+.top5-bar-3 { background: linear-gradient(135deg, #ff8fa3 0%, #ff7a8f 100%); }
+.top5-bar-4 { background: linear-gradient(135deg, #ffb36b 0%, #ffa552 100%); }
+.top5-bar-5 { background: linear-gradient(135deg, #6fd0d0 0%, #5cc4c4 100%); }
+
+/* Eje Y */
+.top5-y-axis {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 60px;
+    width: 50px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    font-size: 0.75em;
+    color: #64748b;
+    padding-right: 10px;
+    text-align: right;
+}
+
+.top5-chart-area {
+    margin-left: 60px;
+    height: 100%;
+    position: relative;
+    border-left: 2px solid #e2e8f0;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+/* Grid lines */
+.top5-grid-lines {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    pointer-events: none;
+}
+
+.top5-grid-line {
+    border-top: 1px solid #f1f5f9;
+    width: 100%;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .top5-bar-chart {
+        height: 420px;
+        padding-bottom: 90px;
+        gap: 8px;
+    }
+    .top5-bar-label {
+        font-size: 0.75em;
+        line-clamp: 4; /* Hasta 4 líneas en móvil */
+    }
+}
+
+/* FILTRO DE FECHA */
+#filtro-fecha-container {
+    transition: all 0.4s ease;
+    max-height: 0;
+    overflow: hidden;
+    padding: 0 28px;
+    opacity: 0;
+}
+
+#filtro-fecha-container.expandido {
+    max-height: 400px;
+    padding: 24px 28px;
+    opacity: 1;
+}
+
+#resultado-filtro-fecha {
+    animation: fadeIn 0.3s ease;
+}
+
+.btn-expandir {
+    background: rgba(255, 255, 255, 0.2);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 0.9em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    backdrop-filter: blur(10px);
+}
+
+.btn-expandir:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.btn-expandir i {
+    transition: transform 0.3s ease;
+}
+
+.btn-expandir.expandido i {
+    transform: rotate(180deg);
+}
+
+/* Input date personalizado */
+input[type="date"] {
+    cursor: pointer;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    filter: grayscale(100%);
+    transition: all 0.2s;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator:hover {
+    filter: grayscale(0%);
+    transform: scale(1.1);
+}
+/* ESPACIADO ENTRE TARJETAS DEL DASHBOARD */
+#module-dashboard .dashboard-card-large {
+    margin-bottom: 20px;
+}
+
+#module-dashboard .dashboard-card-large:last-child {
+    margin-bottom: 0;
+}
 </style>
 </head>
 <body>
@@ -1942,29 +2211,103 @@ body { background: #f5f7fa; min-height: 100vh; }
 
     <main class="main-content">
       <!-- DASHBOARD -->
-      <div id="module-dashboard" class="tab-content active" data-feature="dashboard">
-        <div class="dashboard-stats-grid" id="dashboard-stats"></div>
-        <div class="dashboard-cards-grid">
-          <div class="dashboard-card-large">
-            <div class="card-large-header">
-              <div class="card-large-title"><span class="card-large-icon">📋</span><span>Actividad reciente en pedidos</span></div>
+<!-- DASHBOARD -->
+<!-- DASHBOARD -->
+<div id="module-dashboard" class="tab-content active" data-feature="dashboard">
+    <div class="dashboard-stats-grid" id="dashboard-stats"></div>
+    
+    <!-- INVENTARIO EXPANDIBLE -->
+    <div class="dashboard-card-large" style="margin-top: 24px;">
+        <div class="card-large-header" style="display: flex; justify-content: space-between; align-items: center;">
+            <div class="card-large-title">
+                <span class="card-large-icon">📦</span>
+                <span>Inventario de Productos</span>
             </div>
-            <div class="card-large-body" id="actividad-reciente"><p class="text-center text-muted">Cargando actividad...</p></div>
-            <div class="card-large-footer">
-              <button class="btn-ver-todos" onclick="window.showTab('pedidos')">Ver todos los pedidos <i class="bi bi-arrow-right"></i></button>
-            </div>
-          </div>
-          <div class="dashboard-card-large">
-            <div class="card-large-header">
-              <div class="card-large-title"><span class="card-large-icon">📦</span><span>Inventario de Productos</span></div>
-            </div>
-            <div class="card-large-body" id="inventario-productos"><p class="text-center text-muted">Cargando productos...</p></div>
-            <div class="card-large-footer">
-              <button class="btn-ver-todos" onclick="window.showTab('productos')">Ver todos los productos <i class="bi bi-arrow-right"></i></button>
-            </div>
-          </div>
+            <button class="btn-expandir" onclick="toggleInventario()">
+                <i class="bi bi-chevron-down" id="icono-inventario"></i>
+                <span id="texto-expandir">Expandir</span>
+            </button>
         </div>
-      </div>
+        <div class="card-large-body" id="inventario-productos" style="display: none;">
+            <p class="text-center text-muted">Cargando productos...</p>
+        </div>
+    </div>
+
+    <!-- TOP 5 PRODUCTOS MÁS VENDIDOS -->
+    <div class="dashboard-card-large" style="margin-top: 24px;">
+        <div class="card-large-header" style="display: flex; justify-content: space-between; align-items: center;">
+            <div class="card-large-title">
+                <span class="card-large-icon">🏆</span>
+                <span>Top 5 Productos Más Vendidos</span>
+            </div>
+            <button class="btn-expandir" onclick="toggleTop5Productos()">
+                <i class="bi bi-chevron-down" id="icono-top5"></i>
+                <span id="texto-expandir-top5">Expandir</span>
+            </button>
+        </div>
+        <div class="card-large-body" id="top5-productos-container" style="display: none; padding: 32px;">
+            <div id="top5-content">
+                <p class="text-center text-muted">Cargando productos más vendidos...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- FILTRO DE VENTAS POR FECHA -->
+<div class="dashboard-card-large" style="margin-bottom: 24px;">
+    <div class="card-large-header" style="display: flex; justify-content: space-between; align-items: center;">
+        <div class="card-large-title">
+            <span class="card-large-icon">📅</span>
+            <span>Filtrar Ventas por Fecha</span>
+        </div>
+        <button class="btn-expandir" onclick="toggleFiltroFecha()">
+            <i class="bi bi-chevron-down" id="icono-filtro-fecha"></i>
+            <span id="texto-filtro-fecha">Expandir</span>
+        </button>
+    </div>
+    <div class="card-large-body" id="filtro-fecha-container" style="display: none;">
+        <div class="row g-3">
+            <div class="col-md-4">
+                <label class="form-label">
+                    <i class="bi bi-calendar-event me-2"></i>Fecha Inicial
+                </label>
+                <input type="date" id="fecha-inicial" class="form-control">
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">
+                    <i class="bi bi-calendar-check me-2"></i>Fecha Final
+                </label>
+                <input type="date" id="fecha-final" class="form-control">
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">&nbsp;</label>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-primary flex-fill" onclick="aplicarFiltroFecha()">
+                        <i class="bi bi-funnel me-2"></i>Filtrar
+                    </button>
+                    <button class="btn btn-secondary" onclick="limpiarFiltroFecha()">
+                        <i class="bi bi-x-circle"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Resultados del filtro -->
+        <div id="resultado-filtro-fecha" class="mt-4" style="display: none;">
+            <div class="alert alert-info d-flex align-items-center">
+                <i class="bi bi-info-circle-fill me-3 fs-4"></i>
+                <div>
+                    <strong>Ventas del período seleccionado:</strong>
+                    <div class="mt-1">
+                        <span id="total-ventas-filtro" class="badge bg-success fs-6 me-2">$0</span>
+                        <span id="total-pedidos-filtro" class="badge bg-primary fs-6">0 pedidos</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</div>
 
       <!-- CATEGORIAS -->
       <div id="module-categorias" class="tab-content" data-feature="categorias">
@@ -3112,7 +3455,7 @@ window.cargarDashboard = async function() {
         });
         
         // ✅ ORDENAR: Primero los que tienen MENOS unidades, luego los que tienen MÁS
-        productosInventario.sort((a, b) => a.unidades - b.unidades);
+        productosInventario.sort((a, b) => b.unidades - a.unidades);
         
         const fmtPrecio = (n) => new Intl.NumberFormat('es-CO').format(n);
         
@@ -3204,69 +3547,60 @@ window.cargarDashboard = async function() {
         }
         
         // ✅ NUEVO: Renderizar inventario de productos (sin columna paquetes, ordenado por unidades)
-        const inventarioEl = document.getElementById('inventario-productos');
-        if (inventarioEl) {
-            if (productosInventario.length === 0) {
-                inventarioEl.innerHTML = `
-                    <div class="empty-state">
-                        <div class="empty-icon">📦</div>
-                        <div class="empty-text">No hay productos registrados</div>
-                    </div>
-                `;
-            } else {
-                inventarioEl.innerHTML = `
-                    <div class="inventario-header-inventario">
-                        <div class="inventario-header-prod">Producto</div>
-                        <div class="inventario-header-und">Unidades</div>
-                    </div>
-                    <div class="productos-list-inventario">
-                        ${productosInventario.map((prod, index) => {
-                            // Determinar color del badge según cantidad
-                            let badgeClass = 'badge-unidades';
-                            let badgeStyle = '';
-                            
-                            if (prod.unidades === 0) {
-                                badgeClass = 'badge-cero';
-                            } else if (prod.unidades <= 5) {
-                                // Pocas unidades - color rojo/naranja
-                                badgeStyle = 'background: linear-gradient(135deg, #ef4444, #dc2626);';
-                            } else if (prod.unidades <= 10) {
-                                // Cantidad media - color amarillo
-                                badgeStyle = 'background: linear-gradient(135deg, #f59e0b, #d97706);';
-                            } else {
-                                // Muchas unidades - color verde
-                                badgeStyle = 'background: linear-gradient(135deg, #22c55e, #16a34a);';
+// ✅ NUEVO: Renderizar inventario de productos (sin columna paquetes, ordenado por unidades)
+// ✅ Renderizar inventario de productos (ordenado de mayor a menor)
+const inventarioEl = document.getElementById('inventario-productos');
+if (inventarioEl && productosInventario.length > 0) {
+    inventarioEl.innerHTML = `
+        <div class="inventario-header-inventario">
+            <div class="inventario-header-prod">Producto</div>
+            <div class="inventario-header-und">Unidades</div>
+        </div>
+        <div class="productos-list-inventario">
+            ${productosInventario.map((prod, index) => {
+                let badgeClass = 'badge-unidades';
+                let badgeStyle = '';
+                if (prod.unidades === 0) {
+                    badgeClass = 'badge-cero';
+                } else if (prod.unidades <= 5) {
+                    badgeStyle = 'background: linear-gradient(135deg, #ef4444, #dc2626);';
+                } else if (prod.unidades <= 10) {
+                    badgeStyle = 'background: linear-gradient(135deg, #f59e0b, #d97706);';
+                } else {
+                    badgeStyle = 'background: linear-gradient(135deg, #22c55e, #16a34a);';
+                }
+                return `
+                    <div class="producto-item-inventario" onclick="window.verProductoInventario('${prod.categoriaId}', '${prod.id}')" style="cursor: pointer; animation: slideInProduct 0.3s ease forwards; animation-delay: ${index * 0.05}s;">
+                        <div class="producto-info-inventario">
+                            ${prod.imagen
+                                ? `<img src="${agregarTimestamp(prod.imagen)}" class="producto-thumb-inventario" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                   <div class="producto-thumb-placeholder-inventario" style="display: none;">
+                                       <i class="bi bi-box-seam"></i>
+                                   </div>`
+                                : `<div class="producto-thumb-placeholder-inventario">
+                                       <i class="bi bi-box-seam"></i>
+                                   </div>`
                             }
-                            
-                            return `
-                                <div class="producto-item-inventario" onclick="window.verProductoInventario('${prod.categoriaId}', '${prod.id}')" style="cursor: pointer; animation: slideInProduct 0.3s ease forwards; animation-delay: ${index * 0.05}s;">
-                                    <div class="producto-info-inventario">
-                                        ${prod.imagen 
-                                            ? `<img src="${agregarTimestamp(prod.imagen)}" class="producto-thumb-inventario" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                                               <div class="producto-thumb-placeholder-inventario" style="display: none;">
-                                                   <i class="bi bi-box-seam"></i>
-                                               </div>`
-                                            : `<div class="producto-thumb-placeholder-inventario">
-                                                   <i class="bi bi-box-seam"></i>
-                                               </div>`
-                                        }
-                                        <div class="producto-detalles-inventario">
-                                            <div class="producto-nombre-inventario">${prod.nombre}</div>
-                                            <div class="producto-categoria-inventario">${prod.categoria}</div>
-                                        </div>
-                                    </div>
-                                    <div class="producto-cantidad-und-inventario">
-                                        <span class="cantidad-badge-inventario ${badgeClass}" style="${badgeStyle}">
-                                            ${prod.unidades}
-                                        </span>
-                                    </div>
-                                </div>
-                            `;
-                        }).join('')}
+                            <div class="producto-detalles-inventario">
+                                <div class="producto-nombre-inventario">${prod.nombre}</div>
+                                <div class="producto-categoria-inventario">${prod.categoria}</div>
+                            </div>
+                        </div>
+                        <div class="producto-cantidad-und-inventario">
+                            <span class="cantidad-badge-inventario ${badgeClass}" style="${badgeStyle}">
+                                ${prod.unidades}
+                            </span>
+                        </div>
                     </div>
                 `;
-            }
-        }
+            }).join('')}
+        </div>
+    `;
+}
+
+if (top5Expandido) {
+    actualizarTop5Productos();
+}
         
         console.log('✅ Dashboard actualizado');
     } catch (error) {
@@ -6272,6 +6606,351 @@ document.addEventListener('click', function(e) {
     }
   }
 });
+// === TOGGLE INVENTARIO ===
+function toggleInventario() {
+    const inventarioBody = document.getElementById('inventario-productos');
+    const icono = document.getElementById('icono-inventario');
+    const texto = document.getElementById('texto-expandir');
+    const btn = icono.parentElement;
+    
+    if (inventarioBody.classList.contains('expandido')) {
+        // Colapsar
+        inventarioBody.classList.remove('expandido');
+        inventarioBody.style.display = 'none';
+        icono.classList.remove('bi-chevron-up');
+        icono.classList.add('bi-chevron-down');
+        btn.classList.remove('expandido');
+        texto.textContent = 'Expandir';
+    } else {
+        // Expandir
+        inventarioBody.style.display = 'block';
+        setTimeout(() => {
+            inventarioBody.classList.add('expandido');
+        }, 10);
+        icono.classList.remove('bi-chevron-down');
+        icono.classList.add('bi-chevron-up');
+        btn.classList.add('expandido');
+        texto.textContent = 'Contraer';
+    }
+}
+// === TOP 5 PRODUCTOS MÁS VENDIDOS ===
+let top5Expandido = false;
+
+function toggleTop5Productos() {
+    const container = document.getElementById('top5-productos-container');
+    const icono = document.getElementById('icono-top5');
+    const texto = document.getElementById('texto-expandir-top5');
+    const btn = icono.parentElement;
+    
+    if (top5Expandido) {
+        // Colapsar
+        container.style.display = 'none';
+        icono.classList.remove('bi-chevron-up');
+        icono.classList.add('bi-chevron-down');
+        btn.classList.remove('expandido');
+        texto.textContent = 'Expandir';
+        top5Expandido = false;
+    } else {
+        // Expandir
+        container.style.display = 'block';
+        setTimeout(() => {
+            container.classList.add('expandido');
+        }, 10);
+        icono.classList.remove('bi-chevron-down');
+        icono.classList.add('bi-chevron-up');
+        btn.classList.add('expandido');
+        texto.textContent = 'Colapsar';
+        top5Expandido = true;
+        
+        // Cargar datos si no se han cargado
+        if (!window.top5Cargado) {
+            cargarTop5Productos();
+        }
+    }
+}
+
+async function cargarTop5Productos() {
+    try {
+        if (!currentNegocioId || !db) return;
+        
+        const contentEl = document.getElementById('top5-content');
+        if (!contentEl) return;
+        
+        contentEl.innerHTML = '<p class="text-center text-muted">Cargando productos más vendidos...</p>';
+        
+        // Obtener todos los pedidos
+        const pedidosSnap = await db.ref(`negocios/${currentNegocioId}/pedidos`).once('value');
+        const menuSnap = await db.ref(`negocios/${currentNegocioId}/menu`).once('value');
+        
+        const pedidos = pedidosSnap.val() || {};
+        const menu = menuSnap.val() || {};
+        
+        // Contador de ventas por producto
+        const ventasPorProducto = {};
+        
+        // Recorrer todos los pedidos
+        Object.entries(pedidos).forEach(([pedidoId, pedido]) => {
+            // Solo contar pedidos entregados o completados (no anulados)
+            const estado = (pedido.estado || 'pendiente').toLowerCase();
+            if (estado === 'anulado') return;
+            
+            if (pedido.productos && Array.isArray(pedido.productos)) {
+                pedido.productos.forEach(producto => {
+                    const nombreProducto = producto.nombre || 'Producto sin nombre';
+                    const cantidad = producto.cantidad || producto.qty || 1;
+                    
+                    if (!ventasPorProducto[nombreProducto]) {
+                        ventasPorProducto[nombreProducto] = 0;
+                    }
+                    ventasPorProducto[nombreProducto] += cantidad;
+                });
+            }
+        });
+        
+        // Convertir a array y ordenar
+        const productosArray = Object.entries(ventasPorProducto).map(([nombre, cantidad]) => ({
+            nombre,
+            cantidad
+        }));
+        
+        // Ordenar de mayor a menor y tomar los top 5
+        productosArray.sort((a, b) => b.cantidad - a.cantidad);
+        const top5 = productosArray.slice(0, 5);
+        
+        // Renderizar
+        if (top5.length === 0) {
+            contentEl.innerHTML = `
+                <div class="empty-state">
+                    <div class="empty-icon">📊</div>
+                    <div class="empty-text">No hay ventas registradas aún</div>
+                </div>
+            `;
+        } else {
+            renderizarTop5Chart(top5, contentEl);
+        }
+        
+        window.top5Cargado = true;
+        
+    } catch (error) {
+        console.error('❌ Error cargando top 5:', error);
+        const contentEl = document.getElementById('top5-content');
+        if (contentEl) {
+            contentEl.innerHTML = '<p class="text-center text-danger">Error al cargar los productos</p>';
+        }
+    }
+}
+
+function renderizarTop5Chart(top5, container) {
+    // Encontrar el valor máximo para escalar
+    const maxCantidad = Math.max(...top5.map(p => p.cantidad));
+    
+    // Crear etiquetas del eje Y
+    const yAxisLabels = [];
+    for (let i = 0; i <= 10; i++) {
+        const valor = Math.round((maxCantidad / 10) * i);
+        yAxisLabels.unshift(valor);
+    }
+    
+    let html = `
+        <div class="top5-chart-container">
+            <div class="top5-y-axis">
+                ${yAxisLabels.map(val => `<div>${val}</div>`).join('')}
+            </div>
+            <div class="top5-chart-area">
+                <div class="top5-grid-lines">
+                    ${yAxisLabels.map(() => '<div class="top5-grid-line"></div>').join('')}
+                </div>
+                <div class="top5-bar-chart">
+                    ${top5.map((producto, index) => {
+                        const alturaPorcentaje = (producto.cantidad / maxCantidad) * 100;
+                        const colorClass = `top5-bar-${index + 1}`;
+                        
+                        return `
+                            <div class="top5-bar-wrapper">
+                                <div class="top5-bar-value">${producto.cantidad} unidades</div>
+                                <div class="top5-bar ${colorClass}" 
+                                     style="height: ${Math.max(alturaPorcentaje, 5)}%;"
+                                     title="${producto.nombre}: ${producto.cantidad} unidades">
+                                </div>
+                                <div class="top5-bar-label">${producto.nombre}</div>
+                                <div class="top5-bar-quantity">${producto.cantidad} vendidas</div>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+            </div>
+        </div>
+    `;
+    
+    container.innerHTML = html;
+}
+
+// Función para recargar top 5 cuando se actualice el dashboard
+async function actualizarTop5Productos() {
+    if (top5Expandido) {
+        await cargarTop5Productos();
+    }
+}
+// === FILTRO DE VENTAS POR FECHA ===
+let filtroFechaExpandido = false;
+let ventasFiltradas = [];
+
+function toggleFiltroFecha() {
+    const container = document.getElementById('filtro-fecha-container');
+    const icono = document.getElementById('icono-filtro-fecha');
+    const texto = document.getElementById('texto-filtro-fecha');
+    const btn = icono.parentElement;
+    
+    if (filtroFechaExpandido) {
+        // Colapsar
+        container.style.display = 'none';
+        icono.classList.remove('bi-chevron-up');
+        icono.classList.add('bi-chevron-down');
+        btn.classList.remove('expandido');
+        texto.textContent = 'Expandir';
+        filtroFechaExpandido = false;
+    } else {
+        // Expandir
+        container.style.display = 'block';
+        setTimeout(() => {
+            container.classList.add('expandido');
+        }, 10);
+        icono.classList.remove('bi-chevron-down');
+        icono.classList.add('bi-chevron-up');
+        btn.classList.add('expandido');
+        texto.textContent = 'Colapsar';
+        filtroFechaExpandido = true;
+    }
+}
+
+function aplicarFiltroFecha() {
+    const fechaInicial = document.getElementById('fecha-inicial').value;
+    const fechaFinal = document.getElementById('fecha-final').value;
+    
+    if (!fechaInicial || !fechaFinal) {
+        window.showToast('⚠️ Selecciona ambas fechas', 'warning');
+        return;
+    }
+    
+    const inicio = new Date(fechaInicial).getTime();
+    const fin = new Date(fechaFinal).getTime();
+    
+    if (inicio > fin) {
+        window.showToast('⚠️ La fecha inicial no puede ser mayor a la final', 'warning');
+        return;
+    }
+    
+    // Filtrar pedidos
+    filtrarVentasPorFecha(inicio, fin);
+}
+
+async function filtrarVentasPorFecha(inicio, fin) {
+    try {
+        if (!currentNegocioId || !db) return;
+        
+        const pedidosSnap = await db.ref(`negocios/${currentNegocioId}/pedidos`).once('value');
+        const pedidos = pedidosSnap.val() || {};
+        
+        let totalVentas = 0;
+        let totalPedidos = 0;
+        ventasFiltradas = [];
+        
+        Object.entries(pedidos).forEach(([id, pedido]) => {
+            const timestamp = pedido.timestamp || pedido.fecha || 0;
+            const estado = pedido.estado || 'pendiente';
+            
+            // Solo pedidos entregados/completados en el rango de fechas
+            if ((estado === 'entregado' || estado === 'completado') && 
+                timestamp >= inicio && timestamp <= fin) {
+                totalVentas += (pedido.total || pedido.subtotal || 0);
+                totalPedidos++;
+                ventasFiltradas.push({ id, ...pedido });
+            }
+        });
+        
+        // Mostrar resultados
+        const resultadoDiv = document.getElementById('resultado-filtro-fecha');
+        const totalVentasSpan = document.getElementById('total-ventas-filtro');
+        const totalPedidosSpan = document.getElementById('total-pedidos-filtro');
+        
+        if (totalVentasSpan) {
+            totalVentasSpan.textContent = '$' + totalVentas.toLocaleString('es-CO');
+        }
+        if (totalPedidosSpan) {
+            totalPedidosSpan.textContent = `${totalPedidos} ${totalPedidos === 1 ? 'pedido' : 'pedidos'}`;
+        }
+        
+        if (resultadoDiv) {
+            resultadoDiv.style.display = 'block';
+        }
+        
+        if (totalPedidos === 0) {
+            window.showToast('ℹ️ No hay ventas en el período seleccionado', 'info');
+        } else {
+            window.showToast(`✅ ${totalPedidos} pedidos encontrados`, 'success');
+        }
+        
+    } catch (error) {
+        console.error('❌ Error filtrando ventas:', error);
+        window.showToast('Error al filtrar ventas', 'error');
+    }
+}
+
+function limpiarFiltroFecha() {
+    document.getElementById('fecha-inicial').value = '';
+    document.getElementById('fecha-final').value = '';
+    
+    const resultadoDiv = document.getElementById('resultado-filtro-fecha');
+    if (resultadoDiv) {
+        resultadoDiv.style.display = 'none';
+    }
+    
+    ventasFiltradas = [];
+    window.showToast('Filtro limpiado', 'info');
+}
+
+// Atajo de teclado para filtrar (Ctrl/Cmd + F)
+document.addEventListener('keydown', function(e) {
+    if ((e.ctrlKey || e.metaKey) && e.key === 'f') {
+        e.preventDefault();
+        if (!filtroFechaExpandido) {
+            toggleFiltroFecha();
+        }
+        document.getElementById('fecha-inicial').focus();
+    }
+});
+
+function exportarVentasFiltradas() {
+    if (ventasFiltradas.length === 0) {
+        window.showToast('No hay datos para exportar', 'warning');
+        return;
+    }
+    
+    let csv = 'Fecha,Pedido,Cliente,Total,Estado\n';
+    
+    ventasFiltradas.forEach(pedido => {
+        const fecha = new Date(pedido.timestamp).toLocaleDateString('es-CO');
+        const cliente = pedido.cliente?.nombre || 'N/A';
+        const total = pedido.total || 0;
+        const estado = pedido.estado || 'pendiente';
+        
+        csv += `${fecha},${pedido.id},${cliente},${total},${estado}\n`;
+    });
+    
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    
+    link.setAttribute('href', url);
+    link.setAttribute('download', `ventas_filtradas_${new Date().toISOString().split('T')[0]}.csv`);
+    link.style.visibility = 'hidden';
+    
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    window.showToast('📥 Archivo CSV descargado', 'success');
+}
 </script>
 
 <!-- Toast Notification -->
